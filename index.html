@@ -347,16 +347,16 @@
           <div class="chart-panel">
             <div class="chart-panel__header">
               <div class="chart-panel__title">Portfolio Performance</div>
-              <div class="chart-panel__tabs">
-                <span class="chart-panel__tab">1D</span>
-                <span class="chart-panel__tab">1W</span>
-                <span class="chart-panel__tab active">1M</span>
-                <span class="chart-panel__tab">1Y</span>
+              <div class="chart-panel__tabs" id="portfolioTabs">
+                <span class="chart-panel__tab" data-timeframe="1D">1D</span>
+                <span class="chart-panel__tab" data-timeframe="1W">1W</span>
+                <span class="chart-panel__tab active" data-timeframe="1M">1M</span>
+                <span class="chart-panel__tab" data-timeframe="1Y">1Y</span>
               </div>
             </div>
-            <div class="text-3xl fw-bold font-mono mb-4">$124,560.80 <span class="text-sm text-primary">+12.4%</span></div>
+            <div class="text-3xl fw-bold font-mono mb-4" id="portfolioValue">$124,560.80 <span class="text-sm text-primary" id="portfolioChange">+12.4%</span></div>
             <!-- CSS Area Chart -->
-            <div class="area-chart">
+            <div class="area-chart" id="portfolioChart">
               <div class="area-chart__bar" style="height: 20%"></div>
               <div class="area-chart__bar" style="height: 25%"></div>
               <div class="area-chart__bar" style="height: 22%"></div>
@@ -694,6 +694,77 @@
       </div>
     </div>
   </footer>
+
+  <!-- Portfolio Timeframe Script -->
+  <script>
+    (function () {
+      const timeframeData = {
+        '1D': {
+          bars: [55, 52, 58, 54, 60, 57, 63, 59, 62, 65, 61, 68, 64, 70, 67, 72],
+          value: '$122,830.40',
+          change: '+1.2%',
+          isDown: false
+        },
+        '1W': {
+          bars: [40, 38, 45, 42, 50, 48, 55, 53, 60, 57, 65, 62, 70, 68, 75, 78],
+          value: '$123,410.60',
+          change: '+3.8%',
+          isDown: false
+        },
+        '1M': {
+          bars: [20, 25, 22, 35, 30, 45, 50, 48, 60, 55, 70, 75, 85, 80, 95, 100],
+          value: '$124,560.80',
+          change: '+12.4%',
+          isDown: false
+        },
+        '1Y': {
+          bars: [10, 18, 15, 25, 20, 35, 30, 45, 55, 50, 65, 60, 75, 80, 90, 100],
+          value: '$124,560.80',
+          change: '+48.7%',
+          isDown: false
+        }
+      };
+
+      var tabsContainer = document.getElementById('portfolioTabs');
+      var chart = document.getElementById('portfolioChart');
+      var valueEl = document.getElementById('portfolioValue');
+      var changeEl = document.getElementById('portfolioChange');
+
+      if (!tabsContainer || !chart) return;
+
+      function updateChart(timeframe) {
+        var data = timeframeData[timeframe];
+        if (!data) return;
+
+        // Update active tab styling
+        tabsContainer.querySelectorAll('.chart-panel__tab').forEach(function (tab) {
+          tab.classList.toggle('active', tab.dataset.timeframe === timeframe);
+        });
+
+        // Animate chart bars
+        var bars = chart.querySelectorAll('.area-chart__bar');
+        data.bars.forEach(function (height, i) {
+          if (bars[i]) {
+            bars[i].style.transition = 'height 0.4s ease';
+            bars[i].style.height = height + '%';
+          }
+        });
+
+        // Update value & change label
+        changeEl.textContent = data.change;
+        changeEl.className = data.isDown ? 'text-sm' : 'text-sm text-primary';
+        changeEl.style.color = data.isDown ? 'var(--danger, #ff4d6d)' : '';
+        valueEl.childNodes[0].textContent = data.value + ' ';
+      }
+
+      // Bind click handlers to all tabs
+      tabsContainer.querySelectorAll('.chart-panel__tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          updateChart(tab.dataset.timeframe);
+        });
+      });
+    })();
+  </script>
 
 </body>
 </html>
