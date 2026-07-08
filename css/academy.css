@@ -76,6 +76,8 @@
   gap: var(--space-3);
   transition: all var(--transition-base);
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 }
 
 .topic-card:hover {
@@ -225,6 +227,122 @@
 
 .author-avatar {
   width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: var(--grad-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: var(--fw-bold);
+  color: #fff;
+}
+
+.author-name {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.course-section {
+  margin-top: var(--space-10);
+}
+
+.course-section h2 {
+  margin-bottom: var(--space-4);
+}
+
+.course-list {
+  display: grid;
+  gap: 0.85rem;
+  padding-left: 1.25rem;
+  color: var(--text-secondary);
+}
+
+.course-list li {
+  margin-bottom: 0.25rem;
+}
+
+.course-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.course-metric {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+}
+
+.course-metric span {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.course-metric strong {
+  display: block;
+  font-size: var(--text-lg);
+}
+
+.course-cta {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-8);
+  margin-top: var(--space-10);
+}
+
+.course-cta-grid {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: var(--space-6);
+  align-items: center;
+}
+
+.course-cta-text {
+  max-width: 620px;
+}
+
+.course-cta-text p {
+  color: var(--text-secondary);
+  margin-top: var(--space-4);
+}
+
+.course-cta-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.course-cta-buttons .btn {
+  width: 100%;
+}
+
+.course-cta-details {
+  margin-top: var(--space-5);
+  display: grid;
+  gap: var(--space-3);
+  color: var(--text-secondary);
+}
+
+.course-cta-details span {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .course-metrics,
+  .course-cta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.author-avatar {
   height: 28px;
   border-radius: var(--radius-full);
   background: var(--grad-secondary);
