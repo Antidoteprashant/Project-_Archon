@@ -52,6 +52,23 @@
   gap: var(--space-5);
 }
 
+.form-input {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+}
+
+.form-input option {
+  background: var(--card-bg);
+  color: #fff;
+}
+
+.form-input:hover {
+  background-color: var(--primary);
+  color: #fff;
+}
+
 .contact-form .btn {
   margin-top: var(--space-4);
 }

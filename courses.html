@@ -3,20 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Academy | Archon Trading Platform</title>
+  <title>Courses | Archon Trading Platform</title>
   <link rel="icon" href="data:,">
-  
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/footer.css">
   <link rel="stylesheet" href="css/academy.css">
+  <link rel="stylesheet" href="css/courses.css">
 </head>
 <body>
-
-  <!-- Navigation -->
   <header class="nav">
     <input type="checkbox" id="nav-toggle" class="sr-only">
     <div class="nav__inner">
@@ -42,60 +41,15 @@
   </header>
 
   <main>
-    <section class="academy-hero">
+    <section class="courses-hero">
       <div class="container">
-        <h1 class="academy-title">Master the Markets</h1>
-        <p class="academy-subtitle">Free educational resources, from basic trading concepts to advanced algorithmic strategies.</p>
-        
-        <div class="academy-search">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" placeholder="What do you want to learn today?">
-        </div>
+        <h1 class="academy-title">All Academy Courses</h1>
+        <p class="courses-subtitle">Explore guided learning paths built by Archon mentors to help you move from market basics to advanced strategy execution.</p>
       </div>
     </section>
 
     <section class="section container" style="padding-top: 0;">
-      <!-- Topics -->
-      <h3 class="text-xl fw-bold mb-4">Browse Topics</h3>
-      <div class="topics-grid">
-        <div class="topic-card">
-          <div class="topic-icon"><i class="fa-brands fa-bitcoin"></i></div>
-          <div class="topic-info">
-            <h4>Crypto Basics</h4>
-            <p>12 Lessons</p>
-          </div>
-        </div>
-        <div class="topic-card">
-          <div class="topic-icon" style="color:var(--secondary); background:var(--secondary-glow)"><i class="fa-solid fa-chart-line"></i></div>
-          <div class="topic-info">
-            <h4>Technical Analysis</h4>
-            <p>24 Lessons</p>
-          </div>
-        </div>
-        <div class="topic-card">
-          <div class="topic-icon" style="color:var(--warning); background:var(--warning-glow)"><i class="fa-solid fa-shield-halved"></i></div>
-          <div class="topic-info">
-            <h4>Risk Management</h4>
-            <p>8 Lessons</p>
-          </div>
-        </div>
-        <div class="topic-card">
-          <div class="topic-icon" style="color:var(--danger); background:var(--danger-glow)"><i class="fa-solid fa-brain"></i></div>
-          <div class="topic-info">
-            <h4>Trading Psychology</h4>
-            <p>15 Lessons</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Courses -->
-      <div class="flex justify-between items-center mb-6">
-        <h3 class="text-2xl fw-bold">Featured Courses</h3>
-        <a href="courses.html" class="text-primary text-sm fw-medium">View All <i class="fa-solid fa-arrow-right"></i></a>
-      </div>
-
       <div class="courses-grid">
-        <!-- Course 1 -->
         <div class="course-card">
           <div class="course-img">
             <span class="course-level level-beginner">Beginner</span>
@@ -107,7 +61,7 @@
               <span><i class="fa-solid fa-book"></i> 10 Modules</span>
             </div>
             <h3 class="course-title">Introduction to Trading</h3>
-            <p class="course-desc">Learn the fundamental concepts of financial markets, how order books work, and the basics of placing your first trade.</p>
+            <p class="course-desc">Build a strong foundation in how markets move, how order flow works, and how disciplined entries and exits are planned.</p>
             <div class="course-footer">
               <div class="course-author">
                 <div class="author-avatar">AL</div>
@@ -118,7 +72,6 @@
           </div>
         </div>
 
-        <!-- Course 2 -->
         <div class="course-card">
           <div class="course-img" style="background: linear-gradient(135deg, rgba(41,98,255,0.2), rgba(124,77,255,0.2));">
             <span class="course-level level-intermediate">Intermediate</span>
@@ -130,7 +83,7 @@
               <span><i class="fa-solid fa-book"></i> 18 Modules</span>
             </div>
             <h3 class="course-title">Mastering Price Action</h3>
-            <p class="course-desc">Understand candlestick patterns, support/resistance, trendlines, and how to read the naked chart without relying heavily on indicators.</p>
+            <p class="course-desc">Learn to read raw price behavior, map high-probability zones, and structure trade plans using clear chart context.</p>
             <div class="course-footer">
               <div class="course-author">
                 <div class="author-avatar" style="background:var(--grad-purple)">SJ</div>
@@ -141,7 +94,6 @@
           </div>
         </div>
 
-        <!-- Course 3 -->
         <div class="course-card">
           <div class="course-img" style="background: linear-gradient(135deg, rgba(255,82,82,0.2), rgba(255,179,0,0.2));">
             <span class="course-level level-advanced">Advanced</span>
@@ -153,7 +105,7 @@
               <span><i class="fa-solid fa-book"></i> 22 Modules</span>
             </div>
             <h3 class="course-title">Algorithmic Trading with Python</h3>
-            <p class="course-desc">Build, backtest, and deploy automated trading strategies using Python and the Archon API. Learn to eliminate emotion from trading.</p>
+            <p class="course-desc">Design, test, and iterate rules-based systems that align with your risk model and execute without emotional bias.</p>
             <div class="course-footer">
               <div class="course-author">
                 <div class="author-avatar" style="background:var(--grad-danger)">MC</div>
@@ -172,6 +124,5 @@
       &copy; 2026 Archon Trading.
     </div>
   </footer>
-
 </body>
 </html>

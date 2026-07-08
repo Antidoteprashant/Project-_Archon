@@ -1,0 +1,60 @@
+.coming-soon {
+  min-height: calc(100vh - var(--nav-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: var(--space-20);
+  position: relative;
+  overflow: hidden;
+}
+
+.coming-soon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at top, rgba(41, 98, 255, 0.12), transparent 65%);
+  pointer-events: none;
+}
+
+.coming-soon__card {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  width: 100%;
+  text-align: center;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-3xl);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-12);
+}
+
+.coming-soon__icon {
+  width: 84px;
+  height: 84px;
+  margin: 0 auto var(--space-6);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--primary);
+  background: var(--primary-glow);
+  border: 1px solid rgba(0, 230, 118, 0.35);
+}
+
+.coming-soon__title {
+  margin-bottom: var(--space-4);
+}
+
+.coming-soon__message {
+  max-width: 600px;
+  margin: 0 auto var(--space-8);
+  color: var(--text-secondary);
+}
+
+@media (max-width: 640px) {
+  .coming-soon__card {
+    padding: var(--space-8);
+  }
+}
