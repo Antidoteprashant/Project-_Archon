@@ -261,7 +261,9 @@
             <div class="dash-panel">
               <div class="dash-panel__head">
                 <div class="dash-panel__title">Watchlist</div>
-                <div class="dash-panel__action"><i class="fa-solid fa-plus"></i></div>
+                <button type="button" class="dash-panel__action" id="watchlistAddBtn" aria-label="Add asset to watchlist">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
               </div>
               <div class="watchlist-list">
                 <div class="watchlist-item">
@@ -298,6 +300,64 @@
       </div>
     </main>
   </div>
+
+  <dialog id="watchlistDialog" class="watchlist-dialog">
+    <form method="dialog" class="watchlist-dialog__content">
+      <h3 class="watchlist-dialog__title">Add to Watchlist</h3>
+      <p class="watchlist-dialog__text">Choose an asset to keep an eye on from your dashboard.</p>
+      <div class="watchlist-dialog__actions">
+        <button class="btn btn-ghost btn-sm" value="cancel">Cancel</button>
+        <button class="btn btn-primary btn-sm" value="default">Add Asset</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    const watchlistAddBtn = document.getElementById('watchlistAddBtn');
+    const watchlistDialog = document.getElementById('watchlistDialog');
+    const watchlistList = document.querySelector('.watchlist-list');
+    const addAssetButton = watchlistDialog?.querySelector('button[value="default"]');
+
+    function addFakeWatchlistItem() {
+      if (!watchlistList) return;
+
+      const item = document.createElement('div');
+      item.className = 'watchlist-item';
+      item.innerHTML = `
+        <div class="watchlist-item__asset">
+          <div class="watchlist-item__mini-icon" style="background:#7C4DFF;color:#fff;">F</div>
+          <div>
+            <div class="watchlist-item__name">FAKE</div>
+            <div class="watchlist-item__ticker">Synthetic Asset</div>
+          </div>
+        </div>
+        <div>
+          <div class="watchlist-item__price">$1.00</div>
+          <div class="watchlist-item__price-sub text-primary">+0.0%</div>
+        </div>
+      `;
+
+      watchlistList.appendChild(item);
+    }
+
+    if (watchlistAddBtn && watchlistDialog) {
+      watchlistAddBtn.addEventListener('click', () => {
+        watchlistDialog.showModal();
+      });
+
+      addAssetButton?.addEventListener('click', (event) => {
+        event.preventDefault();
+        addFakeWatchlistItem();
+        watchlistDialog.close();
+      });
+
+      watchlistDialog.addEventListener('click', (event) => {
+        if (event.target === watchlistDialog) {
+          watchlistDialog.close();
+        }
+      });
+    }
+  </script>
 
 </body>
 </html>

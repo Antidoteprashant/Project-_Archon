@@ -361,10 +361,53 @@
   font-size: var(--text-xs);
   color: var(--primary);
   cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
   transition: opacity var(--transition-base);
 }
 
 .dash-panel__action:hover { opacity: 0.7; }
+
+.watchlist-dialog {
+  border: 0;
+  border-radius: var(--radius-2xl);
+  padding: 0;
+  background: transparent;
+}
+
+.watchlist-dialog::backdrop {
+  background: rgba(2, 6, 23, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.watchlist-dialog__content {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-6);
+  min-width: min(320px, 90vw);
+}
+
+.watchlist-dialog__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-lg);
+  font-weight: var(--fw-semibold);
+}
+
+.watchlist-dialog__text {
+  margin: 0 0 var(--space-4);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.watchlist-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
 
 /* ── Wallet Balance Card ─────────────────────────────────── */
 .wallet-card {
