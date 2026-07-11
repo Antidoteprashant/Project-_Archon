@@ -261,3 +261,5 @@
     padding: var(--space-4);
     z-index: 9999;
 }
+
+.nav__logo-img { height: 70px; width: auto; object-fit: contain; mix-blend-mode: screen; clip-path: inset(2% 0); }

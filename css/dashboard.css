@@ -1046,3 +1046,5 @@
   .dash-topbar         { padding: var(--space-4); }
   .dash-content        { padding: var(--space-3); }
 }
+
+.sidebar__logo-img { height: 50px; width: auto; object-fit: contain; mix-blend-mode: screen; clip-path: inset(2% 0); }

@@ -283,3 +283,5 @@ input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {
   display: none;
 }
+
+.auth-logo-img { height: 120px; width: auto; object-fit: contain; margin-bottom: 20px; mix-blend-mode: screen; clip-path: inset(2% 0); }
