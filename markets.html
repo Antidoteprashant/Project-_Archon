@@ -256,5 +256,101 @@
     </div>
   </footer>
 
+<!-- Script to fix Issue #108: Search and Filter functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- 1. LIVE SEARCH FUNCTIONALITY ---
+      const searchInput = document.querySelector('.markets-search__input');
+      
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        
+        // Filter Crypto Cards
+        const cards = document.querySelectorAll('.market-card');
+        cards.forEach(card => {
+          const text = card.textContent.toLowerCase();
+          card.style.display = text.includes(query) ? '' : 'none';
+        });
+
+        // Filter Forex Table Rows
+        const rows = document.querySelectorAll('.market-table tbody tr');
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(query) ? '' : 'none';
+        });
+      });
+
+      // --- 2. FILTER & SORTING FUNCTIONALITY ---
+      const filterButtons = document.querySelectorAll('.markets-filters .btn');
+      const changeBtn = filterButtons[0]; // "24h Change" button
+      const volumeBtn = filterButtons[1]; // "Volume" button
+
+      // Track sort directions (ascending vs descending)
+      let isChangeAsc = false;
+      let isVolAsc = false;
+
+      changeBtn.addEventListener('click', () => {
+        isChangeAsc = !isChangeAsc;
+        sortCryptoCards('change', isChangeAsc);
+        sortForexTable(2, isChangeAsc); // Column index 2 is 24h Change
+        updateButtonIcon(changeBtn, isChangeAsc);
+      });
+
+      volumeBtn.addEventListener('click', () => {
+        isVolAsc = !isVolAsc;
+        sortCryptoCards('volume', isVolAsc);
+        sortForexTable(3, isVolAsc); // Column index 3 is 24h Volume
+        updateButtonIcon(volumeBtn, isVolAsc);
+      });
+
+      // Helper: Sort Crypto Cards (.market-grid)
+      function sortCryptoCards(metric, asc) {
+        const grid = document.querySelector('.market-grid');
+        const cards = Array.from(grid.querySelectorAll('.market-card'));
+
+        cards.sort((a, b) => {
+          if (metric === 'change') {
+            // Parses the percentage from the 24h change element
+            const valA = parseFloat(a.querySelectorAll('.market-card__field-val')[1].textContent.replace(/[^0-9.-]+/g, ""));
+            const valB = parseFloat(b.querySelectorAll('.market-card__field-val')[1].textContent.replace(/[^0-9.-]+/g, ""));
+            return asc ? valA - valB : valB - valA;
+          } else if (metric === 'volume') {
+            // Note: Uses Price as a proxy since Volume is not explicitly shown on crypto cards
+            const valA = parseFloat(a.querySelectorAll('.market-card__field-val')[0].textContent.replace(/[^0-9.-]+/g, ""));
+            const valB = parseFloat(b.querySelectorAll('.market-card__field-val')[0].textContent.replace(/[^0-9.-]+/g, ""));
+            return asc ? valA - valB : valB - valA;
+          }
+          return 0;
+        });
+
+        // Re-append sorted cards to the DOM
+        cards.forEach(card => grid.appendChild(card));
+      }
+
+      // Helper: Sort Forex Table Rows (.market-table)
+      function sortForexTable(colIndex, asc) {
+        const tbody = document.querySelector('.market-table tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        rows.sort((a, b) => {
+          const textA = a.children[colIndex].textContent.replace(/[^0-9.-]+/g, "");
+          const textB = b.children[colIndex].textContent.replace(/[^0-9.-]+/g, "");
+          const valA = parseFloat(textA) || 0;
+          const valB = parseFloat(textB) || 0;
+          return asc ? valA - valB : valB - valA;
+        });
+
+        rows.forEach(row => tbody.appendChild(row));
+      }
+
+      // Helper: Update FontAwesome sort icons visually
+      function updateButtonIcon(btn, asc) {
+        const icon = btn.querySelector('i');
+        if (icon) {
+          icon.className = asc ? 'fa-solid fa-sort-up' : 'fa-solid fa-sort-down';
+        }
+      }
+    });
+  </script>
 </body>
 </html>
