@@ -112,12 +112,30 @@
 
   console.log('Form submission payload:', { firstName, lastName, email });
 
-  // 1. SIMULATE AUTO-LOGIN
-  // Store a session flag so dashboard.html knows the user is authenticated
+  // 1. SIMULATE AUTO-LOGIN AND USER DATABASE
+  let usersData = JSON.parse(localStorage.getItem('usersData') || '{}');
+  
+  // Create mock dashboard data for new user
+  const mockData = {
+    balance: '$' + (Math.random() * 10000 + 1000).toFixed(2),
+    pnl: '+' + (Math.random() * 500).toFixed(2),
+    pnlPercent: '+' + (Math.random() * 15).toFixed(2) + '%',
+    activeOrders: Math.floor(Math.random() * 5) + 1,
+    openPositions: Math.floor(Math.random() * 8) + 1
+  };
+  
+  usersData[email] = {
+    name: firstName + ' ' + lastName,
+    password: password,
+    dashboard: mockData,
+    transactions: []
+  };
+  
+  localStorage.setItem('usersData', JSON.stringify(usersData));
+  
+  // Set current session
   localStorage.setItem('isLoggedIn', 'true');
-  localStorage.setItem('userEmail', email);
-  localStorage.setItem('userPassword', password);
-  localStorage.setItem('userName', firstName + ' ' + lastName);
+  localStorage.setItem('currentUserEmail', email);
 
   // 2. CLEAR THE FORM
   // This resets all text boxes and checkboxes back to empty instantly

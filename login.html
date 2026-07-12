@@ -131,15 +131,16 @@ if (loginBtn) {
             loginBtn.style.opacity = "1";
             loginBtn.style.cursor = "pointer";
 
-            const storedEmail = localStorage.getItem('userEmail');
-            const storedPassword = localStorage.getItem('userPassword');
+            let usersData = JSON.parse(localStorage.getItem('usersData') || '{}');
+            const user = usersData[email];
 
-            if (!storedEmail || email !== storedEmail) {
+            if (!user) {
                 window.location.href = "register.html";
-            } else if (password !== storedPassword) {
+            } else if (password !== user.password) {
                 showError("Wrong password. Please try again.");
             } else {
                 localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('currentUserEmail', email);
                 window.location.href = "dashboard.html";
             }
         }, 1500);

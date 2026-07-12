@@ -34,25 +34,36 @@
 <a href="coming-soon.html" class="sidebar__nav-item">
   <i class="fa-solid fa-clock-rotate-left sidebar__nav-icon"></i> History
 </a>
-      </div>
-
-      <div class="sidebar__section" style="margin-top: auto; margin-bottom: 0;">
-        <a href="coming-soon.html" class="sidebar__nav-item">
-          <i class="fa-solid fa-robot sidebar__nav-icon"></i> Trading Bots
-        </a>
-        <a href="coming-soon.html" class="sidebar__nav-item">
-          <i class="fa-solid fa-bullseye sidebar__nav-icon"></i> Alerts <span class="sidebar__nav-badge sidebar__nav-badge--green">2</span>
-        </a>
+<a href="coming-soon.html" class="sidebar__nav-item">
+  <i class="fa-solid fa-robot sidebar__nav-icon"></i> Trading Bots
+</a>
+<a href="coming-soon.html" class="sidebar__nav-item">
+  <i class="fa-solid fa-bullseye sidebar__nav-icon"></i> Alerts <span class="sidebar__nav-badge sidebar__nav-badge--green">2</span>
+</a>
       </div>
 
       <!-- User Profile -->
       <div class="sidebar__user">
         <div class="sidebar__user-avatar">JD</div>
+        
         <div>
           <div class="sidebar__user-name">John Doe</div>
           <div class="sidebar__user-role">Pro Account</div>
         </div>
-        <i class="fa-solid fa-ellipsis-vertical sidebar__user-menu"></i>
+
+        
+        <i class="fa-solid fa-ellipsis-vertical sidebar__user-menu" id="profileMenuToggle" style="cursor: pointer;"></i>
+        <div class="sidebar__dropdown" id="profileDropdown">
+          <a href="account-settings.html" class="sidebar__dropdown-item"><i class="fa-solid fa-user-gear"></i> Manage Trading Account</a>
+          <a href="transaction-history.html" class="sidebar__dropdown-item"><i class="fa-solid fa-clock-rotate-left"></i> Purchase & Transaction History</a>
+          <a href="portfolio-reports.html" class="sidebar__dropdown-item"><i class="fa-solid fa-file-invoice"></i> Portfolio Reports</a>
+          <a href="security-settings.html" class="sidebar__dropdown-item"><i class="fa-solid fa-shield-halved"></i> Security & Privacy Settings</a>
+          <a href="billing.html" class="sidebar__dropdown-item"><i class="fa-solid fa-credit-card"></i> Subscription & Billing</a>
+          <div class="sidebar__dropdown-divider"></div>
+          <a href="#" id="logoutBtn" class="sidebar__dropdown-item text-danger" style="color: #ef4444;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</a>
+        </div>
+
+        
       </div>
     </aside>
 
@@ -131,7 +142,7 @@
               <div class="overview-card__label">Total Balance</div>
               <i class="fa-solid fa-wallet text-muted"></i>
             </div>
-            <div class="overview-card__value" id="total-balance">$124,560.80</div>
+            <div class="overview-card__value" id="dashTotalBalance">$124,560.80</div>
             <div class="overview-card__change">
               <span class="overview-card__trend trend--up"><i class="fa-solid fa-arrow-up"></i> 12.4%</span> vs last month
             </div>
@@ -142,9 +153,9 @@
               <div class="overview-card__label">24h P&L</div>
               <i class="fa-solid fa-chart-line text-muted"></i>
             </div>
-            <div class="overview-card__value text-primary">+$1,240.50</div>
+            <div class="overview-card__value text-primary" id="dashPnl">+$1,240.50</div>
             <div class="overview-card__change">
-              <span class="overview-card__trend trend--up"><i class="fa-solid fa-arrow-up"></i> 1.2%</span> today
+              <span class="overview-card__trend trend--up" id="dashPnlPercent"><i class="fa-solid fa-arrow-up"></i> 1.2%</span> today
             </div>
           </div>
           
@@ -153,7 +164,7 @@
               <div class="overview-card__label">Active Orders</div>
               <i class="fa-solid fa-layer-group text-muted"></i>
             </div>
-            <div class="overview-card__value">8</div>
+            <div class="overview-card__value" id="dashActiveOrders">8</div>
             <div class="overview-card__change">
               5 Limit, 3 Stop-Loss
             </div>
@@ -168,10 +179,10 @@
             <div class="grid grid-2 gap-5">
               <div class="wallet-card">
                 <div class="wallet-card__label">Available USD</div>
-                <div class="wallet-card__balance" id="available-usd">$45,200.00</div>
+                <div class="wallet-card__balance" id="dashWalletBalance">$45,200.00</div>
                 <div class="wallet-card__actions mt-4">
-                  <button class="btn btn-primary btn-sm" id="deposit-btn">Deposit</button>
-                  <button class="btn btn-ghost btn-sm" id="withdraw-btn">Withdraw</button>
+                  <button class="btn btn-primary btn-sm" id="btnDeposit" onclick="handleDepositClick()">Deposit</button>
+                  <button class="btn btn-ghost btn-sm" id="btnWithdraw" onclick="handleWithdrawClick()">Withdraw</button>
                 </div>
               </div>
               
@@ -450,15 +461,49 @@
         }
       });
     }
+    // Profile Menu Toggle Logic
+    const profileMenuToggle = document.getElementById('profileMenuToggle');
+    const profileDropdown = document.getElementById('profileDropdown');
+    
+    if (profileMenuToggle && profileDropdown) {
+      profileMenuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('show');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!profileDropdown.contains(e.target) && e.target !== profileMenuToggle) {
+          profileDropdown.classList.remove('show');
+        }
+      });
+    }
+
+    // Log Out Logic
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('currentUserEmail');
+        window.location.href = 'login.html';
+      });
+    }
+
     // Auth Check & User Data Population
     if (localStorage.getItem('isLoggedIn') !== 'true') {
       // Disabled for testing purposes
       // window.location.href = 'login.html';
     }
 
-    const userName = localStorage.getItem('userName');
-    if (userName) {
+    const currentUserEmail = localStorage.getItem('currentUserEmail');
+    let usersData = JSON.parse(localStorage.getItem('usersData') || '{}');
+    const userData = usersData[currentUserEmail];
+
+    if (userData) {
+      const userName = userData.name;
       const firstName = userName.split(' ')[0];
+      
+      // Update Name & Avatar
       const sidebarNameEl = document.querySelector('.sidebar__user-name');
       if (sidebarNameEl) sidebarNameEl.textContent = userName;
       
@@ -470,6 +515,82 @@
         const initials = userName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
         avatarEl.textContent = initials;
       }
+
+      // Update Dashboard Stats with specific user data
+      if (userData.dashboard) {
+        const balanceEl = document.getElementById('dashTotalBalance');
+        if (balanceEl) balanceEl.textContent = userData.dashboard.balance;
+
+        const pnlEl = document.getElementById('dashPnl');
+        if (pnlEl) pnlEl.textContent = userData.dashboard.pnl;
+
+        const pnlPercentEl = document.getElementById('dashPnlPercent');
+        if (pnlPercentEl) {
+          pnlPercentEl.innerHTML = `<i class="fa-solid fa-arrow-up"></i> ${userData.dashboard.pnlPercent}`;
+        }
+
+        const ordersEl = document.getElementById('dashActiveOrders');
+        if (ordersEl) ordersEl.textContent = userData.dashboard.activeOrders;
+      }
+
+      // Update wallet balance to match total balance for mockup
+      const walletEl = document.getElementById('dashWalletBalance');
+      if (walletEl) walletEl.textContent = userData.dashboard.balance;
+
+      // Deposit / Withdraw Logic
+      const btnDeposit = document.getElementById('btnDeposit');
+      const btnWithdraw = document.getElementById('btnWithdraw');
+
+      function parseBalance(balStr) {
+        return parseFloat(balStr.replace(/[^0-9.-]+/g,""));
+      }
+
+      function formatBalance(num) {
+        return '$' + num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      }
+
+      function updateBalance(amount, type) {
+        let currentBalance = parseBalance(userData.dashboard.balance);
+        let newBalance = currentBalance + amount;
+        
+        if (newBalance < 0) {
+          alert("Insufficient funds!");
+          return;
+        }
+
+        if (!userData.transactions) userData.transactions = [];
+        const today = new Date().toISOString().split('T')[0];
+        userData.transactions.unshift({
+          date: today,
+          type: type,
+          amount: (amount > 0 ? '+' : '-') + formatBalance(Math.abs(amount)),
+          status: 'Completed'
+        });
+
+        userData.dashboard.balance = formatBalance(newBalance);
+        usersData[currentUserEmail] = userData;
+        localStorage.setItem('usersData', JSON.stringify(usersData));
+
+        const balEl = document.getElementById('dashTotalBalance');
+        if (balEl) balEl.textContent = userData.dashboard.balance;
+        if (walletEl) walletEl.textContent = userData.dashboard.balance;
+      }
+
+      window.handleDepositClick = function() {
+        let amount = prompt("How much would you like to deposit?", "1000");
+        if (amount !== null) {
+          let parsed = parseBalance(amount);
+          if (!isNaN(parsed)) updateBalance(parsed, 'Deposit');
+        }
+      };
+
+      window.handleWithdrawClick = function() {
+        let amount = prompt("How much would you like to withdraw?", "100");
+        if (amount !== null) {
+          let parsed = parseBalance(amount);
+          if (!isNaN(parsed)) updateBalance(-parsed, 'Withdrawal');
+        }
+      };
     }
 
     // Fake Trading Engine Logic
@@ -572,6 +693,7 @@
 
     initTradingSystem();
   </script>
+
 
 </body>
 </html>
