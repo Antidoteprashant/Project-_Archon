@@ -20,8 +20,7 @@
     <!-- Info Side -->
     <div class="auth-info">
       <a href="index.html" class="auth-logo">
-        <div class="auth-logo-icon">A</div> 
-        <div class="auth-logo-text">Archon</div>
+        <img src="images/logo.jpg" alt="Archon" class="auth-logo-img">
       </a>
       
       <div class="auth-info-content">
@@ -51,14 +50,19 @@
       <form class="auth-form">
         <div class="form-group">
           <label class="form-label">Email Address</label>
-          <input type="email" class="form-input" placeholder="name@example.com">
+          <input type="email" id="email" class="form-input" placeholder="name@example.com">
         </div>
         
         <div class="form-group">
           <label class="form-label">Password</label>
-          <div class="input-icon-wrap">
-            <input type="password" class="form-input" placeholder="••••••••">
-            <i class="fa-regular fa-eye"></i>
+         <div class="input-icon-wrap">
+    <input
+        type="password"
+        id="password"
+        class="form-input"
+        placeholder="••••••••"
+    >
+    <i class="fa-regular fa-eye" id="togglePassword"></i>
           </div>
         </div>
         
@@ -69,15 +73,8 @@
           <a href="#" class="auth-link">Forgot password?</a>
         </div>
         
-        <button type="button" class="btn btn-primary btn-lg" style="margin-top: var(--space-4);">Log In</button>
+        <button type="button" id="loginBtn" class="btn btn-primary btn-lg" style="margin-top: var(--space-4);">Log In</button>
       </form>
-      
-      <div class="auth-divider">or continue with</div>
-      
-      <div class="auth-social">
-        <button class="btn btn-ghost"><i class="fa-brands fa-google"></i> Google</button>
-        <button class="btn btn-ghost"><i class="fa-brands fa-apple"></i> Apple</button>
-      </div>
       
       <p class="text-center text-sm text-secondary mt-8">
         Don't have an account? <a href="register.html" class="auth-link">Sign up</a>
@@ -85,6 +82,86 @@
     </div>
 
   </div>
+<script>
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const toggle = document.getElementById("togglePassword");
+const loginBtn = document.getElementById("loginBtn");
+
+if (toggle && passwordInput) {
+    toggle.addEventListener("click", function () {
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggle.classList.remove("fa-eye");
+            toggle.classList.add("fa-eye-slash");
+        } else {
+            passwordInput.type = "password";
+            toggle.classList.remove("fa-eye-slash");
+            toggle.classList.add("fa-eye");
+        }
+    });
+}
+
+if (loginBtn) {
+    loginBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        
+        const existingError = document.getElementById("login-error");
+        if (existingError) {
+            existingError.remove();
+        }
+
+        const email = emailInput ? emailInput.value : "";
+        const password = passwordInput ? passwordInput.value : "";
+
+        if (!email || !password) {
+            showError("Please enter both email and password.");
+            return;
+        }
+
+        const originalText = loginBtn.innerHTML;
+        loginBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Logging in...';
+        loginBtn.disabled = true;
+        loginBtn.style.opacity = "0.7";
+        loginBtn.style.cursor = "not-allowed";
+
+        setTimeout(() => {
+            loginBtn.innerHTML = originalText;
+            loginBtn.disabled = false;
+            loginBtn.style.opacity = "1";
+            loginBtn.style.cursor = "pointer";
+
+            let usersData = JSON.parse(localStorage.getItem('usersData') || '{}');
+            const user = usersData[email];
+
+            if (!user) {
+                window.location.href = "register.html";
+            } else if (password !== user.password) {
+                showError("Wrong password. Please try again.");
+            } else {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('currentUserEmail', email);
+                window.location.href = "dashboard.html";
+            }
+        }, 1500);
+    });
+}
+
+function showError(message) {
+    const errorElement = document.createElement("p");
+    errorElement.id = "login-error";
+    errorElement.style.color = "#ef4444";
+    errorElement.style.fontSize = "0.875rem";
+    errorElement.style.marginTop = "0.5rem";
+    errorElement.style.marginBottom = "1rem";
+    errorElement.style.textAlign = "center";
+    errorElement.innerHTML = message;
+    
+    if (loginBtn && loginBtn.parentNode) {
+        loginBtn.parentNode.insertBefore(errorElement, loginBtn);
+    }
+}
+</script>
   </div>
 <script src="script.js"></script>
 </body>

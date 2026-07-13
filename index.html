@@ -47,8 +47,7 @@
     
     <div class="nav__inner">
       <a href="index.html" class="nav__logo">
-        <div class="nav__logo-icon">A</div>
-        <div class="nav__logo-text">Archon</div>
+        <img src="images/logo.jpg" alt="Archon" class="nav__logo-img">
       </a>
 
       <nav class="nav__links">
@@ -92,92 +91,94 @@
 
   <!-- ================= Hero Section ================= -->
   <main>
-    <section class="hero container">
-      <div class="hero__grid">
-        
-        <!-- Hero Content -->
-        <div class="hero__content">
-          <div class="hero__label"><span class="glow-dot"></span> Next-Gen Trading</div>
-          <h1 class="hero__title">
-            Trade the Future <br>
-            <span class="hero__title-gradient">Without Limits</span>
-          </h1>
-          <p class="hero__subtitle">
-            Experience lightning-fast execution, institutional-grade security, and advanced charting tools all in one beautiful platform. Trade Crypto, Forex, and Stocks seamlessly.
-          </p>
-          <div class="hero__actions">
-            <a href="register.html" class="btn btn-primary btn-xl">Start Trading Now <i class="fa-solid fa-arrow-right"></i></a>
-            <a href="about.html" class="btn btn-outline btn-xl">Explore Features</a>
-          </div>
+    <section class="hero">
+      <div class="container">
+        <div class="hero__grid">
           
-          <div class="hero__stats">
-            <div class="hero__stat">
-              <span class="hero__stat-value">$50B+</span>
-              <span class="hero__stat-label">Quarterly Volume</span>
-            </div>
-            <div class="hero__stat">
-              <span class="hero__stat-value">2M+</span>
-              <span class="hero__stat-label">Active Users</span>
-            </div>
-            <div class="hero__stat">
-              <span class="hero__stat-value">0.01s</span>
-              <span class="hero__stat-label">Execution Time</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Hero Visual (CSS Chart Illustration) -->
-        <div class="hero__visual">
-          
-          <!-- Floating elements -->
-          <div class="hero__float-card hero__float-card--tl">
-            <div class="hero__float-label">Total Profit</div>
-            <div class="hero__float-value text-primary">+$12,450.00</div>
-            <div class="hero__float-badge"><i class="fa-solid fa-arrow-trend-up"></i> 14.5%</div>
-          </div>
-          
-          <div class="hero__float-card hero__float-card--br">
-            <div class="hero__float-label">Active Trades</div>
-            <div class="hero__float-value">8 Open</div>
-          </div>
-
-          <!-- Main Chart Card -->
-          <div class="hero__chart-card gradient-border">
-            <div class="hero__chart-header">
-              <div class="hero__chart-pair">
-                <div class="hero__chart-icon"><i class="fa-brands fa-bitcoin"></i></div>
-                <div>
-                  <div class="hero__chart-name">BTC / USD</div>
-                  <div class="hero__chart-sub">Bitcoin</div>
-                </div>
-              </div>
-              <div class="hero__chart-price">
-                <div class="hero__chart-val">64,230.50</div>
-                <div class="hero__chart-change">+2.45%</div>
-              </div>
+          <!-- Hero Content -->
+          <div class="hero__content">
+            <div class="hero__label"><span class="glow-dot"></span> Next-Gen Trading</div>
+            <h1 class="hero__title">
+              Trade the Future <br>
+              <span class="hero__title-gradient">Without Limits</span>
+            </h1>
+            <p class="hero__subtitle">
+              Experience lightning-fast execution, institutional-grade security, and advanced charting tools all in one beautiful platform. Trade Crypto, Forex, and Stocks seamlessly.
+            </p>
+            <div class="hero__actions">
+              <a href="register.html" class="btn btn-primary btn-xl">Start Trading Now <i class="fa-solid fa-arrow-right"></i></a>
+              <a href="about.html" class="btn btn-outline btn-xl">Explore Features</a>
             </div>
             
-            <!-- CSS Candlesticks -->
-            <div class="hero__candles">
-              <div class="candle up" style="height: 40px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 60%; position:absolute; bottom: 20%;"></div></div>
-              <div class="candle down" style="height: 60px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 80%; position:absolute; bottom: 10%;"></div></div>
-              <div class="candle up" style="height: 70px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 50%; position:absolute; bottom: 40%;"></div></div>
-              <div class="candle up" style="height: 90px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 70%; position:absolute; bottom: 20%;"></div></div>
-              <div class="candle down" style="height: 50px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 40%; position:absolute; bottom: 10%;"></div></div>
-              <div class="candle up" style="height: 110px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 60%; position:absolute; bottom: 30%;"></div></div>
-              <div class="candle up" style="height: 130px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 80%; position:absolute; bottom: 20%;"></div></div>
-              <div class="candle down" style="height: 80px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 70%; position:absolute; bottom: 15%;"></div></div>
-              <div class="candle up" style="height: 140px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 60%; position:absolute; bottom: 30%;"></div></div>
-              <div class="candle up" style="height: 160px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 50%; position:absolute; bottom: 45%;"></div></div>
-            </div>
-
-            <div class="flex justify-between mt-4">
-              <button class="btn btn-success btn-sm btn-full mr-2" style="background:var(--grad-primary); color:#fff; border-radius: var(--radius-md); padding: 0.5rem;">Buy BTC</button>
-              <button class="btn btn-danger btn-sm btn-full ml-2" style="background:var(--grad-danger); color:#fff; border-radius: var(--radius-md); padding: 0.5rem;">Sell BTC</button>
+            <div class="hero__stats">
+              <div class="hero__stat">
+                <span class="hero__stat-value">$50B+</span>
+                <span class="hero__stat-label">Quarterly Volume</span>
+              </div>
+              <div class="hero__stat">
+                <span class="hero__stat-value">2M+</span>
+                <span class="hero__stat-label">Active Users</span>
+              </div>
+              <div class="hero__stat">
+                <span class="hero__stat-value">0.01s</span>
+                <span class="hero__stat-label">Execution Time</span>
+              </div>
             </div>
           </div>
-        </div>
 
+          <!-- Hero Visual (CSS Chart Illustration) -->
+          <div class="hero__visual">
+            
+            <!-- Floating elements -->
+            <div class="hero__float-card hero__float-card--tl">
+              <div class="hero__float-label">Total Profit</div>
+              <div class="hero__float-value text-primary">+$12,450.00</div>
+              <div class="hero__float-badge"><i class="fa-solid fa-arrow-trend-up"></i> 14.5%</div>
+            </div>
+            
+            <div class="hero__float-card hero__float-card--br">
+              <div class="hero__float-label">Active Trades</div>
+              <div class="hero__float-value">8 Open</div>
+            </div>
+
+            <!-- Main Chart Card -->
+            <div class="hero__chart-card gradient-border">
+              <div class="hero__chart-header">
+                <div class="hero__chart-pair">
+                  <div class="hero__chart-icon"><i class="fa-brands fa-bitcoin"></i></div>
+                  <div>
+                    <div class="hero__chart-name">BTC / USD</div>
+                    <div class="hero__chart-sub">Bitcoin</div>
+                  </div>
+                </div>
+                <div class="hero__chart-price">
+                  <div class="hero__chart-val">64,230.50</div>
+                  <div class="hero__chart-change">+2.45%</div>
+                </div>
+              </div>
+              
+              <!-- CSS Candlesticks -->
+              <div class="hero__candles">
+                <div class="candle up" style="height: 40px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 60%; position:absolute; bottom: 20%;"></div></div>
+                <div class="candle down" style="height: 60px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 80%; position:absolute; bottom: 10%;"></div></div>
+                <div class="candle up" style="height: 70px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 50%; position:absolute; bottom: 40%;"></div></div>
+                <div class="candle up" style="height: 90px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 70%; position:absolute; bottom: 20%;"></div></div>
+                <div class="candle down" style="height: 50px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 40%; position:absolute; bottom: 10%;"></div></div>
+                <div class="candle up" style="height: 110px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 60%; position:absolute; bottom: 30%;"></div></div>
+                <div class="candle up" style="height: 130px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 80%; position:absolute; bottom: 20%;"></div></div>
+                <div class="candle down" style="height: 80px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 70%; position:absolute; bottom: 15%;"></div></div>
+                <div class="candle up" style="height: 140px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 60%; position:absolute; bottom: 30%;"></div></div>
+                <div class="candle up" style="height: 160px;"><div class="candle__wick" style="height: 100%;"></div><div class="candle__body" style="height: 50%; position:absolute; bottom: 45%;"></div></div>
+              </div>
+
+              <div class="flex justify-between mt-4">
+                <button class="btn btn-success btn-sm btn-full mr-2" style="background:var(--grad-primary); color:#fff; border-radius: var(--radius-md); padding: 0.5rem;">Buy BTC</button>
+                <button class="btn btn-danger btn-sm btn-full ml-2" style="background:var(--grad-danger); color:#fff; border-radius: var(--radius-md); padding: 0.5rem;">Sell BTC</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </section>
 
@@ -639,8 +640,7 @@
         
         <div class="footer__brand">
           <a href="index.html" class="footer__brand-logo">
-            <div class="footer__brand-icon">A</div>
-            <div class="footer__brand-name">Archon</div>
+            <img src="images/logo.jpg" alt="Archon" class="footer__logo-img">
           </a>
           <p class="footer__brand-tagline">The premium trading platform built for serious investors and traders globally.</p>
           <div class="footer__socials">
