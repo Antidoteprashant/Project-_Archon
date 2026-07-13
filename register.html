@@ -80,6 +80,19 @@
           </div>
         </div>
         
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <div class="input-icon-wrap">
+            <input
+            id="confirmPassword"
+            type="password"
+            class="form-input"
+            placeholder="********"
+            required> 
+          <i class="fa-regular fa-eye" id="toggleConfirmPassword" style="cursor: pointer;"></i>
+          </div>
+        </div>
+        
         <label class="auth-checkbox" style="align-items: flex-start; margin-top: var(--space-2);">
           <input type="checkbox" id="termsCheckbox" style="margin-top: 4px;" required>
           <span class="text-xs leading-relaxed">I agree to the <a href="#" class="auth-link">Terms of Service</a> and <a href="#" class="auth-link">Privacy Policy</a>, and confirm I am over 18 years old.</span>
@@ -96,59 +109,84 @@
   </div>
   <script>
     document.getElementById('registrationForm').addEventListener('submit', function(event) {
-  event.preventDefault(); // Keeps the page from refreshing automatically
+      event.preventDefault(); // Keeps the page from refreshing automatically
 
-  const firstName = document.getElementById('firstName').value.trim();
-  const lastName = document.getElementById('lastName').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-  const termsAccepted = document.getElementById('termsCheckbox').checked;
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const termsAccepted = document.getElementById('termsCheckbox').checked;
 
-  // Browser safety fallback validation
-  if (!firstName || !lastName || !email || !password || !termsAccepted) {
-    alert('Please fill out all required fields.');
-    return;
-  }
+      // Browser safety fallback validation
+      if (!firstName || !lastName || !email || !password || !confirmPassword || !termsAccepted) {
+        alert('Please fill out all required fields.');
+        return;
+      }
 
-  console.log('Form submission payload:', { firstName, lastName, email });
+      // Email format validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address (e.g., name@example.com).');
+        return;
+      }
 
-  // 1. SIMULATE AUTO-LOGIN AND USER DATABASE
-  let usersData = JSON.parse(localStorage.getItem('usersData') || '{}');
-  
-  // Create mock dashboard data for new user
-  const mockData = {
-    balance: '$' + (Math.random() * 10000 + 1000).toFixed(2),
-    pnl: '+' + (Math.random() * 500).toFixed(2),
-    pnlPercent: '+' + (Math.random() * 15).toFixed(2) + '%',
-    activeOrders: Math.floor(Math.random() * 5) + 1,
-    openPositions: Math.floor(Math.random() * 8) + 1
-  };
-  
-  usersData[email] = {
-    name: firstName + ' ' + lastName,
-    password: password,
-    dashboard: mockData,
-    transactions: []
-  };
-  
-  localStorage.setItem('usersData', JSON.stringify(usersData));
-  
-  // Set current session
-  localStorage.setItem('isLoggedIn', 'true');
-  localStorage.setItem('currentUserEmail', email);
+      // Password strength validation
+      const isWeak = password.length < 8 || !/[!@#$%^&*]/.test(password) || !/[A-Z]/.test(password);
+      if (isWeak) {
+        alert('Password is too weak. It must be at least 8 characters long, contain at least one uppercase letter, and at least one special character.');
+        return;
+      }
 
-  // 2. CLEAR THE FORM
-  // This resets all text boxes and checkboxes back to empty instantly
-  this.reset(); 
+      // Password matching validation
+      if (password !== confirmPassword) {
+        alert('Passwords do not match.');
+        return;
+      }
 
-  alert('Success! Registration data captured. Redirecting to dashboard...');
+      console.log('Form submission payload:', { firstName, lastName, email });
 
-  // 3. AUTO LOGIN REDIRECT
-  // Send the user directly to your dashboard.html file
-  window.location.href = 'dashboard.html';
-});
+      // 1. SIMULATE AUTO-LOGIN AND USER DATABASE
+      let usersData = JSON.parse(localStorage.getItem('usersData') || '{}');
+      
+      // Create mock dashboard data for new user
+      const mockData = {
+        balance: '$' + (Math.random() * 10000 + 1000).toFixed(2),
+        pnl: '+' + (Math.random() * 500).toFixed(2),
+        pnlPercent: '+' + (Math.random() * 15).toFixed(2) + '%',
+        activeOrders: Math.floor(Math.random() * 5) + 1,
+        openPositions: Math.floor(Math.random() * 8) + 1
+      };
+      
+      usersData[email] = {
+        name: firstName + ' ' + lastName,
+        password: password,
+        dashboard: mockData,
+        transactions: []
+      };
+      
+      localStorage.setItem('usersData', JSON.stringify(usersData));
+      
+      // Set current session
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('currentUserEmail', email);
 
-    // Password Eye Toggle Feature
+      // 2. CLEAR THE FORM
+      // This resets all text boxes and checkboxes back to empty instantly
+      this.reset(); 
+
+      // Clear dynamic error messages if any
+      const errorMsgs = this.querySelectorAll('.error-message');
+      errorMsgs.forEach(el => el.remove());
+
+      alert('Success! Registration data captured. Redirecting to dashboard...');
+
+      // 3. AUTO LOGIN REDIRECT
+      // Send the user directly to your dashboard.html file
+      window.location.href = 'dashboard.html';
+    });
+
+    // Password Eye Toggle Feature for Password
     const togglePassword = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');
 
@@ -157,6 +195,71 @@
       passwordInput.setAttribute('type', isPasswordType ? 'text' : 'password');
       this.classList.toggle('fa-eye');
       this.classList.toggle('fa-eye-slash');
+    });
+
+    // Password Eye Toggle Feature for Confirm Password
+    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+
+    toggleConfirmPassword.addEventListener('click', function() {
+      const isPasswordType = confirmPasswordInput.getAttribute('type') === 'password';
+      confirmPasswordInput.setAttribute('type', isPasswordType ? 'text' : 'password');
+      this.classList.toggle('fa-eye');
+      this.classList.toggle('fa-eye-slash');
+    });
+
+    // Live Validation for Email Domain Format
+    const emailInput = document.getElementById('email');
+    const emailGroup = emailInput.closest('.form-group');
+    let emailErrorMessage = null;
+
+    emailInput.addEventListener('input', function() {
+      const emailVal = emailInput.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const isValid = emailRegex.test(emailVal) || emailVal === '';
+
+      if (!emailErrorMessage && emailGroup) {
+        emailErrorMessage = document.createElement("p");
+        emailErrorMessage.classList.add("error-message");
+        emailErrorMessage.style.color = "red";
+        emailErrorMessage.style.marginTop = "8px";
+        emailGroup.appendChild(emailErrorMessage);
+      }
+
+      if (!isValid && emailErrorMessage) {
+        emailErrorMessage.textContent = "Please enter a valid email address with a domain (e.g., name@example.com).";
+        emailErrorMessage.style.display = "block";
+      } else if (emailErrorMessage) {
+        emailErrorMessage.textContent = "";
+        emailErrorMessage.style.display = "none";
+      }
+    });
+
+    // Live Validation for Password Confirmation Match
+    const confirmPasswordInputObj = document.getElementById('confirmPassword');
+    const confirmPasswordGroup = confirmPasswordInputObj.closest('.form-group');
+    let confirmErrorMessage = null;
+
+    confirmPasswordInputObj.addEventListener('input', function() {
+      const passwordVal = document.getElementById('password').value;
+      const confirmPasswordVal = confirmPasswordInputObj.value;
+      const isMismatch = passwordVal !== confirmPasswordVal && confirmPasswordVal !== '';
+
+      if (!confirmErrorMessage && confirmPasswordGroup) {
+        confirmErrorMessage = document.createElement("p");
+        confirmErrorMessage.classList.add("error-message");
+        confirmErrorMessage.style.color = "red";
+        confirmErrorMessage.style.marginTop = "8px";
+        confirmPasswordGroup.appendChild(confirmErrorMessage);
+      }
+
+      if (isMismatch && confirmErrorMessage) {
+        confirmErrorMessage.textContent = "Passwords do not match.";
+        confirmErrorMessage.style.display = "block";
+      } else if (confirmErrorMessage) {
+        confirmErrorMessage.textContent = "";
+        confirmErrorMessage.style.display = "none";
+      }
     });
   </script>
 
