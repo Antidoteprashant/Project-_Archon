@@ -479,6 +479,62 @@
         }
       });
     }
+
+    // Load trades from localStorage
+    function renderTrades() {
+      const trades = JSON.parse(localStorage.getItem('archon_trades') || '[]');
+      if (trades.length === 0) return;
+
+      const positionsBody = document.querySelector('.positions-table tbody');
+      if (positionsBody) {
+        trades.slice().forEach(trade => {
+          const tr = document.createElement('tr');
+          const color = trade.ticker === 'BTC' ? '#F7931A' : trade.ticker === 'ETH' ? '#627EEA' : trade.ticker === 'SOL' ? '#9945FF' : '#555';
+          const icon = trade.ticker === 'BTC' ? '<i class="fa-brands fa-bitcoin"></i>' : trade.ticker === 'ETH' ? '<i class="fa-brands fa-ethereum"></i>' : trade.ticker === 'SOL' ? 'S' : '<i class="fa-solid fa-coins"></i>';
+          
+          tr.innerHTML = `
+            <td>
+              <div class="pos-asset">
+                <div class="pos-asset__icon" style="background:${color};color:#fff;">${icon}</div>
+                <div>
+                  <div class="pos-asset__name">${trade.assetName}</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="pos-type pos-type--${trade.type.toLowerCase()}">${trade.type}</span></td>
+            <td>${trade.size} ${trade.ticker}</td>
+            <td>$${trade.entryPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+            <td>$${trade.currentPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+            <td class="pos-pnl up">$0.00</td>
+          `;
+          positionsBody.insertBefore(tr, positionsBody.firstChild);
+        });
+      }
+
+      const timeline = document.querySelector('.timeline');
+      if (timeline) {
+        trades.slice().forEach(trade => {
+          const item = document.createElement('div');
+          item.className = 'timeline-item';
+          const diffMin = Math.round((Date.now() - trade.timestamp) / 60000);
+          const timeStr = diffMin < 1 ? 'Just now' : diffMin < 60 ? `${diffMin}m ago` : `${Math.floor(diffMin/60)}h ago`;
+          
+          item.innerHTML = `
+            <div class="timeline-item__dot timeline-item__dot--buy" style="background: rgba(0, 230, 118, 0.15); color: var(--primary);"><i class="fa-solid fa-arrow-down"></i></div>
+            <div class="timeline-item__content">
+              <div class="timeline-item__title">Bought ${trade.ticker}</div>
+              <div class="timeline-item__desc">${trade.size} ${trade.ticker} at $${trade.entryPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+            </div>
+            <div class="timeline-item__time">${timeStr}</div>
+          `;
+          timeline.insertBefore(item, timeline.firstChild);
+        });
+      }
+    }
+
+    // Call render trades
+    renderTrades();
+
   </script>
 
 </body>

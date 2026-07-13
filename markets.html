@@ -134,7 +134,7 @@
               </div>
             </div>
             <div class="market-card__actions">
-              <button class="btn btn-outline btn-sm btn-full">Trade</button>
+              <button class="btn btn-outline btn-sm btn-full" onclick="openTradeModal('Bitcoin', 'BTC', '$64,230.50')">Trade</button>
             </div>
           </div>
 
@@ -163,7 +163,7 @@
               </div>
             </div>
             <div class="market-card__actions">
-              <button class="btn btn-outline btn-sm btn-full">Trade</button>
+              <button class="btn btn-outline btn-sm btn-full" onclick="openTradeModal('Ethereum', 'ETH', '$3,450.20')">Trade</button>
             </div>
           </div>
           
@@ -192,7 +192,7 @@
               </div>
             </div>
             <div class="market-card__actions">
-              <button class="btn btn-outline btn-sm btn-full">Trade</button>
+              <button class="btn btn-outline btn-sm btn-full" onclick="openTradeModal('Solana', 'SOL', '$142.75')">Trade</button>
             </div>
           </div>
         </div>
@@ -228,7 +228,7 @@
                 <td class="price-cell">1.0845</td>
                 <td class="text-primary fw-semibold">+0.12%</td>
                 <td>$12.5B</td>
-                <td><button class="btn btn-ghost btn-sm">Trade</button></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="openTradeModal('EUR/USD', 'EUR', '1.0845')">Trade</button></td>
               </tr>
               <tr>
                 <td>
@@ -240,8 +240,34 @@
                 <td class="price-cell">1.2630</td>
                 <td class="text-danger fw-semibold">-0.05%</td>
                 <td>$8.2B</td>
-                <td><button class="btn btn-ghost btn-sm">Trade</button></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="openTradeModal('GBP/USD', 'GBP', '1.2630')">Trade</button></td>
               </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Order History Section -->
+      <div class="market-section" id="order-history-section" style="display: none; margin-top: 4rem;">
+        <h2 class="market-section__title" style="margin-bottom: 1.5rem;">
+          <div class="market-section__icon icon-frame" style="background: rgba(255,255,255,0.05); color: var(--text-secondary);"><i class="fa-solid fa-clock-rotate-left"></i></div>
+          Recent Order History
+        </h2>
+        
+        <div class="market-table-wrap">
+          <table class="market-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Asset</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Entry Price</th>
+                <th>Total Cost</th>
+              </tr>
+            </thead>
+            <tbody id="markets-order-history-body">
+              <!-- Dynamically populated -->
             </tbody>
           </table>
         </div>
@@ -256,5 +282,49 @@
     </div>
   </footer>
 
+  <script src="trading.js"></script>
+  <script>
+    function renderMarketsHistory() {
+      const trades = JSON.parse(localStorage.getItem('archon_trades') || '[]');
+      const historySection = document.getElementById('order-history-section');
+      const tbody = document.getElementById('markets-order-history-body');
+      
+      if (trades.length > 0 && historySection && tbody) {
+        historySection.style.display = 'block';
+        tbody.innerHTML = '';
+        
+        trades.slice().reverse().forEach(trade => {
+          const tr = document.createElement('tr');
+          const timeStr = new Date(trade.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          const color = trade.ticker === 'BTC' ? 'linear-gradient(135deg,#F7931A,#FF6B00)' : trade.ticker === 'ETH' ? 'linear-gradient(135deg,#627EEA,#3D5AF1)' : trade.ticker === 'SOL' ? 'linear-gradient(135deg,#9945FF,#14F195)' : 'linear-gradient(135deg,#555,#111)';
+          const icon = trade.ticker === 'BTC' ? '<i class="fa-brands fa-bitcoin"></i>' : trade.ticker === 'ETH' ? '<i class="fa-brands fa-ethereum"></i>' : trade.ticker === 'SOL' ? 'S' : '<i class="fa-solid fa-coins"></i>';
+          const totalCost = trade.size * trade.entryPrice;
+          
+          tr.innerHTML = \`
+            <td style="color: var(--text-muted); font-size: 0.85rem;">\${timeStr}</td>
+            <td>
+              <div class="coin-cell" style="display: flex; align-items: center; gap: 12px;">
+                <div style="width:28px; height:28px; border-radius:50%; background:\${color}; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+                  \${icon}
+                </div>
+                <div class="fw-semibold">\${trade.assetName} <span style="color:var(--text-muted); font-size:0.75rem; margin-left: 4px;">\${trade.ticker}</span></div>
+              </div>
+            </td>
+            <td><span style="color: var(--primary); font-weight: 600; padding: 4px 10px; background: rgba(0, 230, 118, 0.1); border-radius: 6px; font-size: 0.8rem;">Buy</span></td>
+            <td style="font-weight: 600;">\${trade.size} \${trade.ticker}</td>
+            <td class="price-cell">$\${trade.entryPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+            <td style="color: var(--text-primary); font-family: var(--font-mono); font-weight: 700;">$\${totalCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+          \`;
+          tbody.appendChild(tr);
+        });
+      } else if (historySection) {
+        historySection.style.display = 'none';
+      }
+    }
+    
+    // Initial render
+    document.addEventListener('DOMContentLoaded', renderMarketsHistory);
+    window.renderMarketsHistory = renderMarketsHistory;
+  </script>
 </body>
 </html>
