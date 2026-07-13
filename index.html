@@ -611,11 +611,22 @@
           <h2 class="newsletter__title">Stay Ahead of the Market</h2>
           <p class="newsletter__subtitle">Join 100,000+ traders receiving our weekly market analysis and platform updates.</p>
         </div>
-        <div class="newsletter-form">
-          <div class="newsletter-form__row">
-            <input type="email" class="newsletter-form__input" placeholder="Enter your email address...">
-            <button class="btn btn-primary btn-lg">Subscribe</button>
-          </div>
+        <div class="newsletter-form__row">
+    <input
+        type="email"
+        id="newsletterEmail"
+        class="newsletter-form__input"
+        placeholder="Enter your email address..."
+    >
+
+    <button
+        id="subscribeBtn"
+        class="btn btn-primary btn-lg"
+    >
+        Subscribe
+    </button>
+</div>
+          
           <p class="newsletter-form__note">No spam, ever. Unsubscribe at any time.</p>
         </div>
       </div>
@@ -765,6 +776,6 @@
       });
     })();
   </script>
-
+<script src="script.js"></script>
 </body>
 </html>
