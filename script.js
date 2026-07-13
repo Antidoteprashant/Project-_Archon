@@ -1,14 +1,16 @@
 const overlay = document.querySelector(".overlay");
 const authContainer = document.querySelector(".auth-container");
 
-overlay.addEventListener("click", () => {
-    overlay.classList.add("hidden");
-    window.location.href = "index.html";
-});
+if (overlay && authContainer) {
+    overlay.addEventListener("click", () => {
+        overlay.classList.add("hidden");
+        window.location.href = "index.html";
+    });
 
-authContainer.addEventListener("click", (event) => {
-    event.stopPropagation();
-});
+    authContainer.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
+}
 // Newsletter Subscribe
 const subscribeBtn = document.getElementById("subscribeBtn");
 const newsletterEmail = document.getElementById("newsletterEmail");
