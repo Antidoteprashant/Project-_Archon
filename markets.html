@@ -21,8 +21,7 @@
     <input type="checkbox" id="nav-toggle" class="sr-only">
     <div class="nav__inner">
       <a href="index.html" class="nav__logo">
-        <div class="nav__logo-icon">A</div>
-        <div class="nav__logo-text">Archon</div>
+        <img src="images/logo.jpg" alt="Archon" class="nav__logo-img">
       </a>
       <nav class="nav__links">
         <a href="index.html" class="nav__link">Home</a>
@@ -86,16 +85,22 @@
       </div>
 
       <!-- Categories -->
+      <input type="radio" name="market-filter" id="filter-all" class="market-filter-input" checked>
+      <input type="radio" name="market-filter" id="filter-crypto" class="market-filter-input">
+      <input type="radio" name="market-filter" id="filter-forex" class="market-filter-input">
+      <input type="radio" name="market-filter" id="filter-stocks" class="market-filter-input">
+      <input type="radio" name="market-filter" id="filter-commodities" class="market-filter-input">
+
       <div class="category-tabs">
-        <div class="category-tab active"><i class="fa-solid fa-layer-group"></i> All Markets</div>
-        <div class="category-tab"><i class="fa-brands fa-bitcoin"></i> Crypto</div>
-        <div class="category-tab"><i class="fa-solid fa-money-bill-trend-up"></i> Forex</div>
-        <div class="category-tab"><i class="fa-solid fa-chart-simple"></i> Stocks</div>
-        <div class="category-tab"><i class="fa-solid fa-gem"></i> Commodities</div>
+        <label for="filter-all" class="category-tab"><i class="fa-solid fa-layer-group"></i> All Markets</label>
+        <label for="filter-crypto" class="category-tab"><i class="fa-brands fa-bitcoin"></i> Crypto</label>
+        <label for="filter-forex" class="category-tab"><i class="fa-solid fa-money-bill-trend-up"></i> Forex</label>
+        <label for="filter-stocks" class="category-tab"><i class="fa-solid fa-chart-simple"></i> Stocks</label>
+        <label for="filter-commodities" class="category-tab"><i class="fa-solid fa-gem"></i> Commodities</label>
       </div>
 
       <!-- Crypto Section -->
-      <div class="market-section">
+      <div class="market-section category-crypto">
         <h2 class="market-section__title">
           <div class="market-section__icon icon-frame icon-frame-primary"><i class="fa-brands fa-bitcoin"></i></div>
           Cryptocurrency
@@ -128,7 +133,7 @@
               </div>
             </div>
             <div class="market-card__actions">
-              <button class="btn btn-outline btn-sm btn-full">Trade</button>
+              <button class="btn btn-outline btn-sm btn-full" onclick="executeTrade('BTC', 64230.50)">Trade</button>
             </div>
           </div>
 
@@ -157,7 +162,7 @@
               </div>
             </div>
             <div class="market-card__actions">
-              <button class="btn btn-outline btn-sm btn-full">Trade</button>
+              <button class="btn btn-outline btn-sm btn-full" onclick="executeTrade('ETH', 3450.20)">Trade</button>
             </div>
           </div>
           
@@ -186,14 +191,14 @@
               </div>
             </div>
             <div class="market-card__actions">
-              <button class="btn btn-outline btn-sm btn-full">Trade</button>
+              <button class="btn btn-outline btn-sm btn-full" onclick="executeTrade('SOL', 142.75)">Trade</button>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Forex Section -->
-      <div class="market-section">
+      <div class="market-section category-forex">
         <h2 class="market-section__title">
           <div class="market-section__icon icon-frame icon-frame-secondary"><i class="fa-solid fa-money-bill-trend-up"></i></div>
           Forex
@@ -222,7 +227,7 @@
                 <td class="price-cell">1.0845</td>
                 <td class="text-primary fw-semibold">+0.12%</td>
                 <td>$12.5B</td>
-                <td><button class="btn btn-ghost btn-sm">Trade</button></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="executeTrade('EUR/USD', 1.0845)">Trade</button></td>
               </tr>
               <tr>
                 <td>
@@ -234,7 +239,7 @@
                 <td class="price-cell">1.2630</td>
                 <td class="text-danger fw-semibold">-0.05%</td>
                 <td>$8.2B</td>
-                <td><button class="btn btn-ghost btn-sm">Trade</button></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="executeTrade('GBP/USD', 1.2630)">Trade</button></td>
               </tr>
             </tbody>
           </table>
@@ -250,5 +255,149 @@
     </div>
   </footer>
 
+<!-- Script to fix Issue #108: Search and Filter functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- 1. LIVE SEARCH FUNCTIONALITY ---
+      const searchInput = document.querySelector('.markets-search__input');
+      
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        
+        // Filter Crypto Cards
+        const cards = document.querySelectorAll('.market-card');
+        cards.forEach(card => {
+          const text = card.textContent.toLowerCase();
+          card.style.display = text.includes(query) ? '' : 'none';
+        });
+
+        // Filter Forex Table Rows
+        const rows = document.querySelectorAll('.market-table tbody tr');
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(query) ? '' : 'none';
+        });
+      });
+
+      // --- 2. FILTER & SORTING FUNCTIONALITY ---
+      const filterButtons = document.querySelectorAll('.markets-filters .btn');
+      const changeBtn = filterButtons[0]; // "24h Change" button
+      const volumeBtn = filterButtons[1]; // "Volume" button
+
+      // Track sort directions (ascending vs descending)
+      let isChangeAsc = false;
+      let isVolAsc = false;
+
+      changeBtn.addEventListener('click', () => {
+        isChangeAsc = !isChangeAsc;
+        sortCryptoCards('change', isChangeAsc);
+        sortForexTable(2, isChangeAsc); // Column index 2 is 24h Change
+        updateButtonIcon(changeBtn, isChangeAsc);
+      });
+
+      volumeBtn.addEventListener('click', () => {
+        isVolAsc = !isVolAsc;
+        sortCryptoCards('volume', isVolAsc);
+        sortForexTable(3, isVolAsc); // Column index 3 is 24h Volume
+        updateButtonIcon(volumeBtn, isVolAsc);
+      });
+
+      // Helper: Sort Crypto Cards (.market-grid)
+      function sortCryptoCards(metric, asc) {
+        const grid = document.querySelector('.market-grid');
+        const cards = Array.from(grid.querySelectorAll('.market-card'));
+
+        cards.sort((a, b) => {
+          if (metric === 'change') {
+            // Parses the percentage from the 24h change element
+            const valA = parseFloat(a.querySelectorAll('.market-card__field-val')[1].textContent.replace(/[^0-9.-]+/g, ""));
+            const valB = parseFloat(b.querySelectorAll('.market-card__field-val')[1].textContent.replace(/[^0-9.-]+/g, ""));
+            return asc ? valA - valB : valB - valA;
+          } else if (metric === 'volume') {
+            // Note: Uses Price as a proxy since Volume is not explicitly shown on crypto cards
+            const valA = parseFloat(a.querySelectorAll('.market-card__field-val')[0].textContent.replace(/[^0-9.-]+/g, ""));
+            const valB = parseFloat(b.querySelectorAll('.market-card__field-val')[0].textContent.replace(/[^0-9.-]+/g, ""));
+            return asc ? valA - valB : valB - valA;
+          }
+          return 0;
+        });
+
+        // Re-append sorted cards to the DOM
+        cards.forEach(card => grid.appendChild(card));
+      }
+
+      // Helper: Sort Forex Table Rows (.market-table)
+      function sortForexTable(colIndex, asc) {
+        const tbody = document.querySelector('.market-table tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        rows.sort((a, b) => {
+          const textA = a.children[colIndex].textContent.replace(/[^0-9.-]+/g, "");
+          const textB = b.children[colIndex].textContent.replace(/[^0-9.-]+/g, "");
+          const valA = parseFloat(textA) || 0;
+          const valB = parseFloat(textB) || 0;
+          return asc ? valA - valB : valB - valA;
+        });
+
+        rows.forEach(row => tbody.appendChild(row));
+      }
+
+      // Helper: Update FontAwesome sort icons visually
+      function updateButtonIcon(btn, asc) {
+        const icon = btn.querySelector('i');
+        if (icon) {
+          icon.className = asc ? 'fa-solid fa-sort-up' : 'fa-solid fa-sort-down';
+        }
+      }
+    });
+
+    // --- 3. FAKE TRADING ENGINE ---
+    window.executeTrade = function(asset, currentPrice) {
+      const action = prompt(`Trade ${asset} (Current Price: $${currentPrice})\nEnter 'Buy' or 'Sell':`, 'Buy');
+      if (!action || (action.toLowerCase() !== 'buy' && action.toLowerCase() !== 'sell')) {
+        return;
+      }
+
+      const sizeStr = prompt(`Enter quantity of ${asset} to ${action}:`, '1');
+      const size = parseFloat(sizeStr);
+
+      if (isNaN(size) || size <= 0) {
+        alert('Invalid quantity.');
+        return;
+      }
+
+      const cost = size * currentPrice;
+      let balance = parseFloat(localStorage.getItem('fakeBalance') || '100000');
+      let positions = JSON.parse(localStorage.getItem('openPositions') || '[]');
+
+      if (action.toLowerCase() === 'buy') {
+        if (balance >= cost) {
+          balance -= cost;
+          positions.push({
+            asset: asset,
+            type: 'Buy',
+            size: size,
+            entryPrice: currentPrice,
+            timestamp: Date.now()
+          });
+          localStorage.setItem('fakeBalance', balance.toString());
+          localStorage.setItem('openPositions', JSON.stringify(positions));
+          alert(`Successfully bought ${size} ${asset} for $${cost.toFixed(2)}.`);
+        } else {
+          alert('Insufficient Fake USD balance for this trade.');
+        }
+      } else {
+          positions.push({
+            asset: asset,
+            type: 'Sell',
+            size: size,
+            entryPrice: currentPrice,
+            timestamp: Date.now()
+          });
+          localStorage.setItem('openPositions', JSON.stringify(positions));
+          alert(`Successfully shorted ${size} ${asset}.`);
+      }
+    };
+  </script>
 </body>
 </html>
