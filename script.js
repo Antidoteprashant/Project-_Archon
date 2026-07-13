@@ -87,16 +87,7 @@ if (contactForm) {
         }, 1000);
     });
 }
-// Overlay code
-...
 
-// Newsletter Subscribe
-...
-
-// Contact Form
-...
-
-// 👇 Paste the Global Offices Map code HERE
 // Global Offices Map
 const officeCards = document.querySelectorAll(".office-card");
 const officeMap = document.getElementById("officeMap");
