@@ -137,17 +137,21 @@
 
         <div class="settings-card">
           <h2 class="settings-title">Change Password</h2>
-          <form class="settings-form">
+          <form class="settings-form" id="changePasswordForm">
             <div class="form-group">
               <label>Current Password</label>
-              <input type="password" class="form-input">
+              <input type="password" class="form-input" id="currentPassword" required>
             </div>
             <div class="form-group">
               <label>New Password</label>
-              <input type="password" class="form-input">
+              <input type="password" class="form-input" id="newPassword" required>
+            </div>
+            <div class="form-group">
+              <label>Confirm New Password</label>
+              <input type="password" class="form-input" id="confirmNewPassword" required>
             </div>
             <div class="form-group mt-4">
-              <button type="button" class="btn btn-primary">Update Password</button>
+              <button type="submit" class="btn btn-primary">Update Password</button>
             </div>
           </form>
         </div>
@@ -369,6 +373,40 @@
 
         const ordersEl = document.getElementById('dashActiveOrders');
         if (ordersEl) ordersEl.textContent = userData.dashboard.activeOrders;
+      }
+      
+      // Password update handling
+      const changePasswordForm = document.getElementById('changePasswordForm');
+      if (changePasswordForm) {
+        changePasswordForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          
+          const currentPasswordInput = document.getElementById('currentPassword');
+          const newPasswordInput = document.getElementById('newPassword');
+          const confirmNewPasswordInput = document.getElementById('confirmNewPassword');
+          
+          const currentPasswordVal = currentPasswordInput.value;
+          const newPasswordVal = newPasswordInput.value;
+          const confirmNewPasswordVal = confirmNewPasswordInput.value;
+          
+          if (currentPasswordVal !== userData.password) {
+            alert('Incorrect current password.');
+            return;
+          }
+          
+          if (newPasswordVal !== confirmNewPasswordVal) {
+            alert('New password and confirmation password do not match.');
+            return;
+          }
+          
+          // update password
+          userData.password = newPasswordVal;
+          usersData[currentUserEmail] = userData;
+          localStorage.setItem('usersData', JSON.stringify(usersData));
+          
+          alert('Password updated successfully!');
+          changePasswordForm.reset();
+        });
       }
     }
   </script>
