@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wallet | Archon Trading Platform</title>
+  <link rel="icon" href="data:,">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/wallet.css">
+</head>
+<body>
+
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <a href="index.html" class="sidebar__logo">
+        <div class="sidebar__logo-icon">A</div>
+        <div class="sidebar__logo-text">Archon</div>
+      </a>
+      
+      <div class="sidebar__section">
+        <a href="dashboard.html" class="sidebar__nav-item">
+          <i class="fa-solid fa-table-columns sidebar__nav-icon"></i> Overview
+        </a>
+        <a href="markets.html" class="sidebar__nav-item">
+          <i class="fa-solid fa-chart-line sidebar__nav-icon"></i> Trading
+        </a>
+        <a href="wallet.html" class="sidebar__nav-item active">
+          <i class="fa-solid fa-wallet sidebar__nav-icon"></i> Wallet
+        </a>
+        <a href="coming-soon.html" class="sidebar__nav-item">
+          <i class="fa-solid fa-clock-rotate-left sidebar__nav-icon"></i> History
+        </a>
+      </div>
+
+      <div class="sidebar__section" style="margin-top: auto; margin-bottom: 0;">
+        <a href="coming-soon.html" class="sidebar__nav-item">
+          <i class="fa-solid fa-robot sidebar__nav-icon"></i> Trading Bots
+        </a>
+        <a href="coming-soon.html" class="sidebar__nav-item">
+          <i class="fa-solid fa-bullseye sidebar__nav-icon"></i> Alerts <span class="sidebar__nav-badge sidebar__nav-badge--green">2</span>
+        </a>
+      </div>
+
+      <!-- User Profile -->
+      <div class="sidebar__user">
+        <div class="sidebar__user-avatar">JD</div>
+        <div>
+          <div class="sidebar__user-name">John Doe</div>
+          <div class="sidebar__user-role">Pro Account</div>
+        </div>
+        <i class="fa-solid fa-ellipsis-vertical sidebar__user-menu"></i>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dash-main">
+      
+      <!-- Topbar -->
+      <header class="dash-topbar">
+        <div class="dash-topbar__greeting">
+          <div class="dash-topbar__greeting-name">My Wallet</div>
+          <div class="dash-topbar__greeting-sub">Manage your funds and assets safely.</div>
+        </div>
+        <div class="dash-topbar__right">
+          <a href="index.html" class="btn btn-outline btn-sm hide-mobile">Log Out</a>
+        </div>
+      </header>
+
+      <div class="dash-content">
+        
+        <!-- Big Balance Card -->
+        <div class="wallet-balance-card">
+          <div class="wallet-balance-card__info">
+            <div class="wallet-balance-card__label">Total Available Balance</div>
+            <div class="wallet-balance-card__amount" id="wallet-total-balance">$0.00</div>
+            <div class="wallet-balance-card__sub">≈ 0.00000000 BTC</div>
+          </div>
+          <div class="wallet-balance-card__actions">
+            <button class="btn btn-primary" id="wallet-deposit-btn">Deposit Funds</button>
+            <button class="btn btn-outline" id="wallet-withdraw-btn">Withdraw Funds</button>
+          </div>
+        </div>
+
+        <div class="wallet-grid">
+          
+          <!-- Left Column: Asset Breakdown -->
+          <div class="wallet-assets">
+            <div class="wallet-section-title">
+              Asset Holdings
+            </div>
+            
+            <div id="wallet-asset-list">
+              <!-- Fiat Asset (Always shows Available USD) -->
+              <div class="wallet-asset-item">
+                <div class="wallet-asset-item__left">
+                  <div class="wallet-asset-item__icon wallet-asset-item__icon--fiat">
+                    <i class="fa-solid fa-dollar-sign"></i>
+                  </div>
+                  <div>
+                    <div class="wallet-asset-item__name">US Dollar</div>
+                    <div class="wallet-asset-item__ticker">USD (Fiat)</div>
+                  </div>
+                </div>
+                <div class="wallet-asset-item__right">
+                  <div class="wallet-asset-item__balance" id="wallet-fiat-balance">$0.00</div>
+                  <div class="wallet-asset-item__value">Available</div>
+                </div>
+              </div>
+              
+              <!-- Crypto Assets will be populated here via JS -->
+            </div>
+          </div>
+
+          <!-- Right Column: Recent Transactions -->
+          <div class="wallet-history">
+            <div class="wallet-section-title">
+              Recent Transactions
+            </div>
+            <div id="wallet-tx-list">
+              <!-- Transactions will be populated via JS -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Utility format currency
+    function formatCurrency(num) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
+    }
+
+    function updateWalletUI() {
+      const balance = parseFloat(localStorage.getItem('fakeBalance') || '100000');
+      const positions = JSON.parse(localStorage.getItem('openPositions') || '[]');
+      const txHistory = JSON.parse(localStorage.getItem('walletTransactions') || '[]');
+
+      // Update total balance text
+      document.getElementById('wallet-total-balance').textContent = formatCurrency(balance);
+      document.getElementById('wallet-fiat-balance').textContent = formatCurrency(balance);
+
+      // Estimate BTC equivalent roughly
+      const btcEq = (balance / 64000).toFixed(8);
+      document.querySelector('.wallet-balance-card__sub').textContent = `≈ ${btcEq} BTC`;
+
+      // Aggregate positions by asset
+      const holdings = {};
+      positions.forEach(pos => {
+        if (!holdings[pos.asset]) holdings[pos.asset] = { size: 0, currentVal: 0 };
+        
+        if (pos.type === 'Buy') {
+          holdings[pos.asset].size += pos.size;
+          holdings[pos.asset].currentVal += (pos.size * pos.entryPrice); // Approximate value
+        } else {
+          // Simplification for shorting in this demo
+        }
+      });
+
+      // Render asset holdings
+      const assetList = document.getElementById('wallet-asset-list');
+      // Keep fiat at the top by cleaning up anything below it
+      while (assetList.children.length > 1) {
+        assetList.removeChild(assetList.lastChild);
+      }
+
+      Object.keys(holdings).forEach(asset => {
+        if (holdings[asset].size > 0) {
+          const item = document.createElement('div');
+          item.className = 'wallet-asset-item';
+          item.innerHTML = `
+            <div class="wallet-asset-item__left">
+              <div class="wallet-asset-item__icon wallet-asset-item__icon--crypto">
+                ${asset[0]}
+              </div>
+              <div>
+                <div class="wallet-asset-item__name">${asset}</div>
+                <div class="wallet-asset-item__ticker">Crypto</div>
+              </div>
+            </div>
+            <div class="wallet-asset-item__right">
+              <div class="wallet-asset-item__balance">${holdings[asset].size.toFixed(4)} ${asset}</div>
+              <div class="wallet-asset-item__value">${formatCurrency(holdings[asset].currentVal)}</div>
+            </div>
+          `;
+          assetList.appendChild(item);
+        }
+      });
+
+      // Render transactions
+      const txList = document.getElementById('wallet-tx-list');
+      txList.innerHTML = '';
+      
+      if (txHistory.length === 0) {
+        txList.innerHTML = '<div style="color:var(--text-muted); font-size:var(--text-sm); text-align:center; padding: 20px 0;">No recent transactions.</div>';
+      } else {
+        // Show last 5
+        const recentTxs = txHistory.slice(-5).reverse();
+        recentTxs.forEach(tx => {
+          const isDeposit = tx.type === 'Deposit';
+          const item = document.createElement('div');
+          item.className = 'wallet-tx-item';
+          item.innerHTML = `
+            <div class="wallet-tx-item__left">
+              <div class="wallet-tx-item__icon ${isDeposit ? 'deposit' : 'withdraw'}">
+                <i class="fa-solid fa-arrow-${isDeposit ? 'down' : 'up'}"></i>
+              </div>
+              <div>
+                <div class="wallet-tx-item__title">${isDeposit ? 'Fiat Deposit' : 'Fiat Withdrawal'}</div>
+                <div class="wallet-tx-item__date">${new Date(tx.timestamp).toLocaleString()}</div>
+              </div>
+            </div>
+            <div class="wallet-tx-item__amount ${isDeposit ? 'deposit' : 'withdraw'}">
+              ${isDeposit ? '+' : '-'}${formatCurrency(tx.amount)}
+            </div>
+          `;
+          txList.appendChild(item);
+        });
+      }
+    }
+
+    // Initialize state
+    if (!localStorage.getItem('fakeBalance')) localStorage.setItem('fakeBalance', '100000');
+    if (!localStorage.getItem('walletTransactions')) localStorage.setItem('walletTransactions', JSON.stringify([]));
+
+    updateWalletUI();
+
+    // Handlers
+    document.getElementById('wallet-deposit-btn')?.addEventListener('click', () => {
+      const amountStr = prompt('Enter amount to deposit (USD):', '1000');
+      if (amountStr) {
+        const amount = parseFloat(amountStr);
+        if (!isNaN(amount) && amount > 0) {
+          const balance = parseFloat(localStorage.getItem('fakeBalance'));
+          localStorage.setItem('fakeBalance', (balance + amount).toString());
+          
+          // Log tx
+          const txs = JSON.parse(localStorage.getItem('walletTransactions'));
+          txs.push({ type: 'Deposit', amount: amount, timestamp: Date.now() });
+          localStorage.setItem('walletTransactions', JSON.stringify(txs));
+
+          updateWalletUI();
+        } else {
+          alert('Invalid amount.');
+        }
+      }
+    });
+
+    document.getElementById('wallet-withdraw-btn')?.addEventListener('click', () => {
+      const amountStr = prompt('Enter amount to withdraw (USD):', '1000');
+      if (amountStr) {
+        const amount = parseFloat(amountStr);
+        const balance = parseFloat(localStorage.getItem('fakeBalance'));
+        if (!isNaN(amount) && amount > 0 && amount <= balance) {
+          localStorage.setItem('fakeBalance', (balance - amount).toString());
+          
+          // Log tx
+          const txs = JSON.parse(localStorage.getItem('walletTransactions'));
+          txs.push({ type: 'Withdraw', amount: amount, timestamp: Date.now() });
+          localStorage.setItem('walletTransactions', JSON.stringify(txs));
+
+          updateWalletUI();
+        } else {
+          alert('Invalid amount or insufficient balance.');
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

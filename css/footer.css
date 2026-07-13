@@ -264,3 +264,5 @@
   }
   .footer__compliance { justify-content: center; }
 }
+
+.footer__logo-img { height: 70px; width: auto; object-fit: contain; mix-blend-mode: screen; clip-path: inset(2% 0); }

@@ -44,6 +44,7 @@ if (subscribeBtn && newsletterEmail) {
         }, 1000);
     });
 }
+
 // Contact Form
 const contactForm = document.getElementById("contactForm");
 
@@ -121,3 +122,4 @@ if (officeMap && googleMapsLink) {
         });
     });
 }
+

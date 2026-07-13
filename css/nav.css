@@ -250,3 +250,16 @@
   .nav__actions .btn { display: none; }
   .nav__hamburger    { display: flex; }
 }
+#nav-toggle:checked ~ .nav__inner .nav__links {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--bg-primary);
+    padding: var(--space-4);
+    z-index: 9999;
+}
+
+.nav__logo-img { height: 70px; width: auto; object-fit: contain; mix-blend-mode: screen; clip-path: inset(2% 0); }

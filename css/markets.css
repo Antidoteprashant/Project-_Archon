@@ -155,6 +155,35 @@
   font-weight: var(--fw-semibold);
   box-shadow: var(--shadow-primary);
 }
+.market-filter-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.market-filter-input:checked ~ .market-section {
+  display: none;
+}
+
+#filter-all:checked ~ .market-section,
+#filter-crypto:checked ~ .category-crypto,
+#filter-forex:checked ~ .category-forex,
+#filter-stocks:checked ~ .category-stocks,
+#filter-commodities:checked ~ .category-commodities {
+  display: block;
+}
+
+#filter-all:checked ~ .category-tabs label[for="filter-all"],
+#filter-crypto:checked ~ .category-tabs label[for="filter-crypto"],
+#filter-forex:checked ~ .category-tabs label[for="filter-forex"],
+#filter-stocks:checked ~ .category-tabs label[for="filter-stocks"],
+#filter-commodities:checked ~ .category-tabs label[for="filter-commodities"] {
+  background: var(--grad-primary);
+  border-color: transparent;
+  color: var(--text-inverse);
+  font-weight: var(--fw-semibold);
+  box-shadow: var(--shadow-primary);
+}
 
 /* ── Market Category Section ─────────────────────────────── */
 .market-section {

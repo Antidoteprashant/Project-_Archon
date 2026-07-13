@@ -19,8 +19,7 @@
     <!-- Info Side -->
     <div class="auth-info">
       <a href="index.html" class="auth-logo">
-        <div class="auth-logo-icon">A</div>
-        <div class="auth-logo-text">Archon</div>
+        <img src="images/logo.jpg" alt="Archon" class="auth-logo-img">
       </a>
       
       <div class="auth-info-content">
@@ -51,49 +50,56 @@
         <p>Set up your free Archon account in seconds</p>
       </div>
       
-      <form class="auth-form">
+      <form class="auth-form" id="registrationForm">
         <div class="auth-form-row">
           <div class="form-group">
             <label class="form-label">First Name</label>
-            <input type="text" class="form-input" placeholder="John">
+            <input type="text" id="firstName" class="form-input" placeholder="John" required>
           </div>
           <div class="form-group">
             <label class="form-label">Last Name</label>
-            <input type="text" class="form-input" placeholder="Doe">
+            <input type="text" id="lastName" class="form-input" placeholder="Doe" required>
           </div>
         </div>
         
         <div class="form-group">
           <label class="form-label">Email Address</label>
-          <input type="email" class="form-input" placeholder="name@example.com">
+          <input type="email" id="email" class="form-input" placeholder="name@example.com" required>
         </div>
         
         <div class="form-group">
           <label class="form-label">Password</label>
           <div class="input-icon-wrap">
             <input
-    id="password"
-    type="password"
-    class="form-input"
-    placeholder="••••••••">
-            <i id="togglePassword" class="fa-regular fa-eye"></i>
+            id="password"
+            type="password"
+            class="form-input"
+            placeholder="********"
+            required> 
+          <i class="fa-regular fa-eye" id="togglePassword" style="cursor: pointer;"></i>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <div class="input-icon-wrap">
+            <input
+            id="confirmPassword"
+            type="password"
+            class="form-input"
+            placeholder="********"
+            required> 
+          <i class="fa-regular fa-eye" id="toggleConfirmPassword" style="cursor: pointer;"></i>
           </div>
         </div>
         
         <label class="auth-checkbox" style="align-items: flex-start; margin-top: var(--space-2);">
-          <input type="checkbox" style="margin-top: 4px;">
+          <input type="checkbox" id="termsCheckbox" style="margin-top: 4px;" required>
           <span class="text-xs leading-relaxed">I agree to the <a href="#" class="auth-link">Terms of Service</a> and <a href="#" class="auth-link">Privacy Policy</a>, and confirm I am over 18 years old.</span>
         </label>
         
-        <button type="button" class="btn btn-primary btn-lg" style="margin-top: var(--space-4);">Create Account</button>
+        <button type="submit" class="btn btn-primary btn-lg" style="margin-top: var(--space-4);">Create Account</button>
       </form>
-      
-      <div class="auth-divider">or sign up with</div>
-      
-      <div class="auth-social">
-        <button class="btn btn-ghost"><i class="fa-brands fa-google"></i> Google</button>
-        <button class="btn btn-ghost"><i class="fa-brands fa-apple"></i> Apple</button>
-      </div>
       
       <p class="text-center text-sm text-secondary mt-6">
         Already have an account? <a href="login.html" class="auth-link">Log in</a>
@@ -101,22 +107,163 @@
     </div>
 
   </div>
-
   <script>
-const password = document.getElementById("password");
-const toggle = document.getElementById("togglePassword");
+    document.getElementById('registrationForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Keeps the page from refreshing automatically
 
-toggle.addEventListener("click", function () {
-    if (password.type === "password") {
-        password.type = "text";
-        toggle.classList.remove("fa-eye");
-        toggle.classList.add("fa-eye-slash");
-    } else {
-        password.type = "password";
-        toggle.classList.remove("fa-eye-slash");
-        toggle.classList.add("fa-eye");
-    }
-});
-</script>
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const termsAccepted = document.getElementById('termsCheckbox').checked;
+
+      // Browser safety fallback validation
+      if (!firstName || !lastName || !email || !password || !confirmPassword || !termsAccepted) {
+        alert('Please fill out all required fields.');
+        return;
+      }
+
+      // Email format validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address (e.g., name@example.com).');
+        return;
+      }
+
+      // Password strength validation
+      const isWeak = password.length < 8 || !/[!@#$%^&*]/.test(password) || !/[A-Z]/.test(password);
+      if (isWeak) {
+        alert('Password is too weak. It must be at least 8 characters long, contain at least one uppercase letter, and at least one special character.');
+        return;
+      }
+
+      // Password matching validation
+      if (password !== confirmPassword) {
+        alert('Passwords do not match.');
+        return;
+      }
+
+      console.log('Form submission payload:', { firstName, lastName, email });
+
+      // 1. SIMULATE AUTO-LOGIN AND USER DATABASE
+      let usersData = JSON.parse(localStorage.getItem('usersData') || '{}');
+      
+      // Create mock dashboard data for new user
+      const mockData = {
+        balance: '$' + (Math.random() * 10000 + 1000).toFixed(2),
+        pnl: '+' + (Math.random() * 500).toFixed(2),
+        pnlPercent: '+' + (Math.random() * 15).toFixed(2) + '%',
+        activeOrders: Math.floor(Math.random() * 5) + 1,
+        openPositions: Math.floor(Math.random() * 8) + 1
+      };
+      
+      usersData[email] = {
+        name: firstName + ' ' + lastName,
+        password: password,
+        dashboard: mockData,
+        transactions: []
+      };
+      
+      localStorage.setItem('usersData', JSON.stringify(usersData));
+      
+      // Set current session
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('currentUserEmail', email);
+
+      // 2. CLEAR THE FORM
+      // This resets all text boxes and checkboxes back to empty instantly
+      this.reset(); 
+
+      // Clear dynamic error messages if any
+      const errorMsgs = this.querySelectorAll('.error-message');
+      errorMsgs.forEach(el => el.remove());
+
+      alert('Success! Registration data captured. Redirecting to dashboard...');
+
+      // 3. AUTO LOGIN REDIRECT
+      // Send the user directly to your dashboard.html file
+      window.location.href = 'dashboard.html';
+    });
+
+    // Password Eye Toggle Feature for Password
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    togglePassword.addEventListener('click', function() {
+      const isPasswordType = passwordInput.getAttribute('type') === 'password';
+      passwordInput.setAttribute('type', isPasswordType ? 'text' : 'password');
+      this.classList.toggle('fa-eye');
+      this.classList.toggle('fa-eye-slash');
+    });
+
+    // Password Eye Toggle Feature for Confirm Password
+    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+
+    toggleConfirmPassword.addEventListener('click', function() {
+      const isPasswordType = confirmPasswordInput.getAttribute('type') === 'password';
+      confirmPasswordInput.setAttribute('type', isPasswordType ? 'text' : 'password');
+      this.classList.toggle('fa-eye');
+      this.classList.toggle('fa-eye-slash');
+    });
+
+    // Live Validation for Email Domain Format
+    const emailInput = document.getElementById('email');
+    const emailGroup = emailInput.closest('.form-group');
+    let emailErrorMessage = null;
+
+    emailInput.addEventListener('input', function() {
+      const emailVal = emailInput.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const isValid = emailRegex.test(emailVal) || emailVal === '';
+
+      if (!emailErrorMessage && emailGroup) {
+        emailErrorMessage = document.createElement("p");
+        emailErrorMessage.classList.add("error-message");
+        emailErrorMessage.style.color = "red";
+        emailErrorMessage.style.marginTop = "8px";
+        emailGroup.appendChild(emailErrorMessage);
+      }
+
+      if (!isValid && emailErrorMessage) {
+        emailErrorMessage.textContent = "Please enter a valid email address with a domain (e.g., name@example.com).";
+        emailErrorMessage.style.display = "block";
+      } else if (emailErrorMessage) {
+        emailErrorMessage.textContent = "";
+        emailErrorMessage.style.display = "none";
+      }
+    });
+
+    // Live Validation for Password Confirmation Match
+    const confirmPasswordInputObj = document.getElementById('confirmPassword');
+    const confirmPasswordGroup = confirmPasswordInputObj.closest('.form-group');
+    let confirmErrorMessage = null;
+
+    confirmPasswordInputObj.addEventListener('input', function() {
+      const passwordVal = document.getElementById('password').value;
+      const confirmPasswordVal = confirmPasswordInputObj.value;
+      const isMismatch = passwordVal !== confirmPasswordVal && confirmPasswordVal !== '';
+
+      if (!confirmErrorMessage && confirmPasswordGroup) {
+        confirmErrorMessage = document.createElement("p");
+        confirmErrorMessage.classList.add("error-message");
+        confirmErrorMessage.style.color = "red";
+        confirmErrorMessage.style.marginTop = "8px";
+        confirmPasswordGroup.appendChild(confirmErrorMessage);
+      }
+
+      if (isMismatch && confirmErrorMessage) {
+        confirmErrorMessage.textContent = "Passwords do not match.";
+        confirmErrorMessage.style.display = "block";
+      } else if (confirmErrorMessage) {
+        confirmErrorMessage.textContent = "";
+        confirmErrorMessage.style.display = "none";
+      }
+    });
+  </script>
+
+
+<script src="script.js"></script>
 </body>
 </html>
