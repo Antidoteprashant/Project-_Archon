@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Archon Trading Platform</title>
+  <link rel="icon" href="data:,">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <a href="index.html" class="sidebar__logo">
+        <img src="images/logo.jpg" alt="Archon" class="sidebar__logo-img">
+      </a>
+      
+      <div class="sidebar__section">
+        <a href="dashboard.html" class="sidebar__nav-item active">
+  <i class="fa-solid fa-table-columns sidebar__nav-icon"></i> Overview
+</a>
+<a href="markets.html" class="sidebar__nav-item">
+  <i class="fa-solid fa-chart-line sidebar__nav-icon"></i> Trading
+</a>
+<a href="coming-soon.html" class="sidebar__nav-item">
+  <i class="fa-solid fa-wallet sidebar__nav-icon"></i> Wallet
+</a>
+<a href="coming-soon.html" class="sidebar__nav-item">
+  <i class="fa-solid fa-clock-rotate-left sidebar__nav-icon"></i> History
+</a>
+<a href="coming-soon.html" class="sidebar__nav-item">
+  <i class="fa-solid fa-robot sidebar__nav-icon"></i> Trading Bots
+</a>
+<a href="coming-soon.html" class="sidebar__nav-item">
+  <i class="fa-solid fa-bullseye sidebar__nav-icon"></i> Alerts <span class="sidebar__nav-badge sidebar__nav-badge--green">2</span>
+</a>
+      </div>
+
+      <!-- User Profile -->
+      <div class="sidebar__user">
+        <div class="sidebar__user-avatar">JD</div>
+        
+        <div>
+          <div class="sidebar__user-name">John Doe</div>
+          <div class="sidebar__user-role">Pro Account</div>
+        </div>
+
+        
+        <i class="fa-solid fa-ellipsis-vertical sidebar__user-menu" id="profileMenuToggle" style="cursor: pointer;"></i>
+        <div class="sidebar__dropdown" id="profileDropdown">
+          <a href="account-settings.html" class="sidebar__dropdown-item"><i class="fa-solid fa-user-gear"></i> Manage Trading Account</a>
+          <a href="transaction-history.html" class="sidebar__dropdown-item"><i class="fa-solid fa-clock-rotate-left"></i> Purchase & Transaction History</a>
+          <a href="portfolio-reports.html" class="sidebar__dropdown-item"><i class="fa-solid fa-file-invoice"></i> Portfolio Reports</a>
+          <a href="security-settings.html" class="sidebar__dropdown-item"><i class="fa-solid fa-shield-halved"></i> Security & Privacy Settings</a>
+          <a href="billing.html" class="sidebar__dropdown-item"><i class="fa-solid fa-credit-card"></i> Subscription & Billing</a>
+          <div class="sidebar__dropdown-divider"></div>
+          <a href="#" id="logoutBtn" class="sidebar__dropdown-item text-danger" style="color: #ef4444;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</a>
+        </div>
+
+        
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dash-main">
+      
+      <!-- Topbar -->
+      <header class="dash-topbar">
+        <div class="dash-topbar__greeting">
+          <div class="dash-topbar__greeting-name">Manage Trading Account</div>
+          <div class="dash-topbar__greeting-sub">Manage your account and preferences.</div>
+        </div>
+        <div class="dash-topbar__right">
+          <div class="dash-topbar__icon-wrap">
+            <button type="button" class="dash-topbar__icon-btn" id="searchToggleBtn" aria-label="Open search" aria-expanded="false" aria-controls="dashSearchPanel">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            <div class="dash-topbar__panel dash-topbar__panel--search" id="dashSearchPanel" hidden>
+              <div class="dash-topbar__panel-head">
+                <div class="dash-topbar__panel-title">Search</div>
+                <button type="button" class="dash-topbar__panel-close" data-close-search aria-label="Close search">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+              <form class="dash-topbar__search-form">
+                <input type="search" class="dash-topbar__search-input" placeholder="Search markets or alerts" aria-label="Search dashboard" />
+                <button type="submit" class="dash-topbar__search-action" aria-label="Submit search">
+                  <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="dash-topbar__icon-wrap">
+            <button type="button" class="dash-topbar__icon-btn" id="notifToggleBtn" aria-label="Open notifications" aria-expanded="false" aria-controls="dashNotificationsPanel">
+              <i class="fa-regular fa-bell"></i>
+              <div class="dash-topbar__notif-dot"></div>
+            </button>
+            <div class="dash-topbar__panel dash-topbar__panel--notifications" id="dashNotificationsPanel" hidden>
+              <div class="dash-topbar__panel-head">
+                <div class="dash-topbar__panel-title">Notifications</div>
+                <button type="button" class="dash-topbar__panel-close" data-close-notifications aria-label="Close notifications">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+              <div class="notif-list">
+                <div class="notif-item notif-item--unread">
+                  <div class="notif-item__icon" style="background:rgba(0,230,118,0.15);color:var(--primary);"><i class="fa-solid fa-bolt"></i></div>
+                  <div>
+                    <div class="notif-item__title">Price alert triggered</div>
+                    <div class="notif-item__desc">BTC crossed your target of $64,000.</div>
+                    <div class="notif-item__time">2 min ago</div>
+                  </div>
+                </div>
+                <div class="notif-item">
+                  <div class="notif-item__icon" style="background:rgba(41,98,255,0.15);color:var(--secondary-light);"><i class="fa-solid fa-wallet"></i></div>
+                  <div>
+                    <div class="notif-item__title">Deposit received</div>
+                    <div class="notif-item__desc">$5,000 was credited to your account.</div>
+                    <div class="notif-item__time">1 hour ago</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a href="index.html" class="btn btn-outline btn-sm hide-mobile">Log Out</a>
+        </div>
+      </header>
+
+      <div class="dash-content">
+
+        <div class="settings-card">
+          <h2 class="settings-title">Personal Information</h2>
+          <form class="settings-form">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" class="form-input" id="settingsName" disabled>
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" class="form-input" id="settingsEmail" disabled>
+            </div>
+            <div class="form-group">
+              <label>KYC Status</label>
+              <div class="badge badge--success">Verified</div>
+            </div>
+            <div class="form-group mt-4">
+              <button type="button" class="btn btn-primary">Save Changes</button>
+            </div>
+          </form>
+        </div>
+        
+        <script>
+          setTimeout(() => {
+            const currentEmail = localStorage.getItem('currentUserEmail');
+            let usersData = JSON.parse(localStorage.getItem('usersData') || '{}');
+            const userData = usersData[currentEmail];
+            if (userData) {
+              document.getElementById('settingsName').value = userData.name;
+              document.getElementById('settingsEmail').value = currentEmail;
+            }
+          }, 100);
+        </script>
+
+      </div>
+    
+  </div>
+
+  <dialog id="watchlistDialog" class="watchlist-dialog">
+    <form method="dialog" class="watchlist-dialog__content">
+      <h3 class="watchlist-dialog__title">Add to Watchlist</h3>
+      <p class="watchlist-dialog__text">Choose an asset to keep an eye on from your dashboard.</p>
+      <div class="watchlist-dialog__actions">
+        <button class="btn btn-ghost btn-sm" value="cancel">Cancel</button>
+        <button class="btn btn-primary btn-sm" value="default">Add Asset</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    const searchToggleBtn = document.getElementById('searchToggleBtn');
+    const notifToggleBtn = document.getElementById('notifToggleBtn');
+    const searchPanel = document.getElementById('dashSearchPanel');
+    const notifPanel = document.getElementById('dashNotificationsPanel');
+    const searchInput = searchPanel?.querySelector('input');
+    const searchForm = searchPanel?.querySelector('form');
+    const searchCloseBtn = searchPanel?.querySelector('[data-close-search]');
+    const notifCloseBtn = notifPanel?.querySelector('[data-close-notifications]');
+
+    function closeTopbarPanels(exceptPanel = null) {
+      if (searchPanel && searchPanel !== exceptPanel) {
+        searchPanel.hidden = true;
+        searchToggleBtn?.setAttribute('aria-expanded', 'false');
+      }
+
+      if (notifPanel && notifPanel !== exceptPanel) {
+        notifPanel.hidden = true;
+        notifToggleBtn?.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    function openTopbarPanel(panel, trigger) {
+      closeTopbarPanels(panel);
+      panel.hidden = false;
+      trigger?.setAttribute('aria-expanded', 'true');
+
+      if (panel === searchPanel) {
+        searchInput?.focus();
+      }
+    }
+
+    searchToggleBtn?.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const isOpen = !searchPanel?.hidden;
+
+      if (isOpen) {
+        closeTopbarPanels();
+      } else {
+        openTopbarPanel(searchPanel, searchToggleBtn);
+      }
+    });
+
+    notifToggleBtn?.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const isOpen = !notifPanel?.hidden;
+
+      if (isOpen) {
+        closeTopbarPanels();
+      } else {
+        openTopbarPanel(notifPanel, notifToggleBtn);
+      }
+    });
+
+    searchCloseBtn?.addEventListener('click', () => {
+      closeTopbarPanels();
+    });
+
+    notifCloseBtn?.addEventListener('click', () => {
+      closeTopbarPanels();
+    });
+
+    searchForm?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      searchInput?.blur();
+      closeTopbarPanels();
+    });
+
+    document.addEventListener('click', (event) => {
+      const clickedInsideTopbar = event.target.closest('.dash-topbar__icon-wrap') || event.target.closest('.dash-topbar__panel');
+      if (!clickedInsideTopbar) {
+        closeTopbarPanels();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeTopbarPanels();
+      }
+    });
+
+    const watchlistAddBtn = document.getElementById('watchlistAddBtn');
+    const watchlistDialog = document.getElementById('watchlistDialog');
+    const watchlistList = document.querySelector('.watchlist-list');
+    const addAssetButton = watchlistDialog?.querySelector('button[value="default"]');
+
+    function addFakeWatchlistItem() {
+      if (!watchlistList) return;
+
+      const item = document.createElement('div');
+      item.className = 'watchlist-item';
+      item.innerHTML = `
+        <div class="watchlist-item__asset">
+          <div class="watchlist-item__mini-icon" style="background:#7C4DFF;color:#fff;">F</div>
+          <div>
+            <div class="watchlist-item__name">FAKE</div>
+            <div class="watchlist-item__ticker">Synthetic Asset</div>
+          </div>
+        </div>
+        <div>
+          <div class="watchlist-item__price">$1.00</div>
+          <div class="watchlist-item__price-sub text-primary">+0.0%</div>
+        </div>
+      `;
+
+      watchlistList.appendChild(item);
+    }
+
+    if (watchlistAddBtn && watchlistDialog) {
+      watchlistAddBtn.addEventListener('click', () => {
+        watchlistDialog.showModal();
+      });
+
+      addAssetButton?.addEventListener('click', (event) => {
+        event.preventDefault();
+        addFakeWatchlistItem();
+        watchlistDialog.close();
+      });
+
+      watchlistDialog.addEventListener('click', (event) => {
+        if (event.target === watchlistDialog) {
+          watchlistDialog.close();
+        }
+      });
+    }
+    // Profile Menu Toggle Logic
+    const profileMenuToggle = document.getElementById('profileMenuToggle');
+    const profileDropdown = document.getElementById('profileDropdown');
+    
+    if (profileMenuToggle && profileDropdown) {
+      profileMenuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('show');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!profileDropdown.contains(e.target) && e.target !== profileMenuToggle) {
+          profileDropdown.classList.remove('show');
+        }
+      });
+    }
+
+    // Log Out Logic
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('currentUserEmail');
+        window.location.href = 'login.html';
+      });
+    }
+
+    // Auth Check & User Data Population
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.href = 'login.html';
+    }
+
+    const currentUserEmail = localStorage.getItem('currentUserEmail');
+    let usersData = JSON.parse(localStorage.getItem('usersData') || '{}');
+    const userData = usersData[currentUserEmail];
+
+    if (userData) {
+      const userName = userData.name;
+      const firstName = userName.split(' ')[0];
+      
+      // Update Name & Avatar
+      const sidebarNameEl = document.querySelector('.sidebar__user-name');
+      if (sidebarNameEl) sidebarNameEl.textContent = userName;
+      
+      const greetingEl = document.querySelector('.dash-topbar__greeting-name');
+      if (greetingEl) greetingEl.textContent = `Welcome back, ${firstName}! 👋`;
+      
+      const avatarEl = document.querySelector('.sidebar__user-avatar');
+      if (avatarEl) {
+        const initials = userName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        avatarEl.textContent = initials;
+      }
+
+      // Update Dashboard Stats with specific user data
+      if (userData.dashboard) {
+        const balanceEl = document.getElementById('dashTotalBalance');
+        if (balanceEl) balanceEl.textContent = userData.dashboard.balance;
+
+        const pnlEl = document.getElementById('dashPnl');
+        if (pnlEl) pnlEl.textContent = userData.dashboard.pnl;
+
+        const pnlPercentEl = document.getElementById('dashPnlPercent');
+        if (pnlPercentEl) {
+          pnlPercentEl.innerHTML = `<i class="fa-solid fa-arrow-up"></i> ${userData.dashboard.pnlPercent}`;
+        }
+
+        const ordersEl = document.getElementById('dashActiveOrders');
+        if (ordersEl) ordersEl.textContent = userData.dashboard.activeOrders;
+      }
+    }
+  </script>
+
+</body>
+</html>

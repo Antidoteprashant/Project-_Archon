@@ -21,8 +21,7 @@
     <input type="checkbox" id="nav-toggle" class="sr-only">
     <div class="nav__inner">
       <a href="index.html" class="nav__logo">
-        <div class="nav__logo-icon">A</div>
-        <div class="nav__logo-text">Archon</div>
+        <img src="images/logo.jpg" alt="Archon" class="nav__logo-img">
       </a>
       <nav class="nav__links">
         <a href="index.html" class="nav__link">Home</a>
@@ -134,7 +133,7 @@
               </div>
             </div>
             <div class="market-card__actions">
-              <button class="btn btn-outline btn-sm btn-full" onclick="openTradeModal('Bitcoin', 'BTC', '$64,230.50')">Trade</button>
+              <button class="btn btn-outline btn-sm btn-full" onclick="executeTrade('BTC', 64230.50)">Trade</button>
             </div>
           </div>
 
@@ -163,7 +162,7 @@
               </div>
             </div>
             <div class="market-card__actions">
-              <button class="btn btn-outline btn-sm btn-full" onclick="openTradeModal('Ethereum', 'ETH', '$3,450.20')">Trade</button>
+              <button class="btn btn-outline btn-sm btn-full" onclick="executeTrade('ETH', 3450.20)">Trade</button>
             </div>
           </div>
           
@@ -192,7 +191,7 @@
               </div>
             </div>
             <div class="market-card__actions">
-              <button class="btn btn-outline btn-sm btn-full" onclick="openTradeModal('Solana', 'SOL', '$142.75')">Trade</button>
+              <button class="btn btn-outline btn-sm btn-full" onclick="executeTrade('SOL', 142.75)">Trade</button>
             </div>
           </div>
         </div>
@@ -228,7 +227,7 @@
                 <td class="price-cell">1.0845</td>
                 <td class="text-primary fw-semibold">+0.12%</td>
                 <td>$12.5B</td>
-                <td><button class="btn btn-ghost btn-sm" onclick="openTradeModal('EUR/USD', 'EUR', '1.0845')">Trade</button></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="executeTrade('EUR/USD', 1.0845)">Trade</button></td>
               </tr>
               <tr>
                 <td>
@@ -240,7 +239,7 @@
                 <td class="price-cell">1.2630</td>
                 <td class="text-danger fw-semibold">-0.05%</td>
                 <td>$8.2B</td>
-                <td><button class="btn btn-ghost btn-sm" onclick="openTradeModal('GBP/USD', 'GBP', '1.2630')">Trade</button></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="executeTrade('GBP/USD', 1.2630)">Trade</button></td>
               </tr>
             </tbody>
           </table>
@@ -282,49 +281,149 @@
     </div>
   </footer>
 
-  <script src="trading.js"></script>
+<!-- Script to fix Issue #108: Search and Filter functionality -->
   <script>
-    function renderMarketsHistory() {
-      const trades = JSON.parse(localStorage.getItem('archon_trades') || '[]');
-      const historySection = document.getElementById('order-history-section');
-      const tbody = document.getElementById('markets-order-history-body');
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- 1. LIVE SEARCH FUNCTIONALITY ---
+      const searchInput = document.querySelector('.markets-search__input');
       
-      if (trades.length > 0 && historySection && tbody) {
-        historySection.style.display = 'block';
-        tbody.innerHTML = '';
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
         
-        trades.slice().reverse().forEach(trade => {
-          const tr = document.createElement('tr');
-          const timeStr = new Date(trade.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          const color = trade.ticker === 'BTC' ? 'linear-gradient(135deg,#F7931A,#FF6B00)' : trade.ticker === 'ETH' ? 'linear-gradient(135deg,#627EEA,#3D5AF1)' : trade.ticker === 'SOL' ? 'linear-gradient(135deg,#9945FF,#14F195)' : 'linear-gradient(135deg,#555,#111)';
-          const icon = trade.ticker === 'BTC' ? '<i class="fa-brands fa-bitcoin"></i>' : trade.ticker === 'ETH' ? '<i class="fa-brands fa-ethereum"></i>' : trade.ticker === 'SOL' ? 'S' : '<i class="fa-solid fa-coins"></i>';
-          const totalCost = trade.size * trade.entryPrice;
-          
-          tr.innerHTML = \`
-            <td style="color: var(--text-muted); font-size: 0.85rem;">\${timeStr}</td>
-            <td>
-              <div class="coin-cell" style="display: flex; align-items: center; gap: 12px;">
-                <div style="width:28px; height:28px; border-radius:50%; background:\${color}; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
-                  \${icon}
-                </div>
-                <div class="fw-semibold">\${trade.assetName} <span style="color:var(--text-muted); font-size:0.75rem; margin-left: 4px;">\${trade.ticker}</span></div>
-              </div>
-            </td>
-            <td><span style="color: var(--primary); font-weight: 600; padding: 4px 10px; background: rgba(0, 230, 118, 0.1); border-radius: 6px; font-size: 0.8rem;">Buy</span></td>
-            <td style="font-weight: 600;">\${trade.size} \${trade.ticker}</td>
-            <td class="price-cell">$\${trade.entryPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-            <td style="color: var(--text-primary); font-family: var(--font-mono); font-weight: 700;">$\${totalCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-          \`;
-          tbody.appendChild(tr);
+        // Filter Crypto Cards
+        const cards = document.querySelectorAll('.market-card');
+        cards.forEach(card => {
+          const text = card.textContent.toLowerCase();
+          card.style.display = text.includes(query) ? '' : 'none';
         });
-      } else if (historySection) {
-        historySection.style.display = 'none';
+
+        // Filter Forex Table Rows
+        const rows = document.querySelectorAll('.market-table tbody tr');
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(query) ? '' : 'none';
+        });
+      });
+
+      // --- 2. FILTER & SORTING FUNCTIONALITY ---
+      const filterButtons = document.querySelectorAll('.markets-filters .btn');
+      const changeBtn = filterButtons[0]; // "24h Change" button
+      const volumeBtn = filterButtons[1]; // "Volume" button
+
+      // Track sort directions (ascending vs descending)
+      let isChangeAsc = false;
+      let isVolAsc = false;
+
+      changeBtn.addEventListener('click', () => {
+        isChangeAsc = !isChangeAsc;
+        sortCryptoCards('change', isChangeAsc);
+        sortForexTable(2, isChangeAsc); // Column index 2 is 24h Change
+        updateButtonIcon(changeBtn, isChangeAsc);
+      });
+
+      volumeBtn.addEventListener('click', () => {
+        isVolAsc = !isVolAsc;
+        sortCryptoCards('volume', isVolAsc);
+        sortForexTable(3, isVolAsc); // Column index 3 is 24h Volume
+        updateButtonIcon(volumeBtn, isVolAsc);
+      });
+
+      // Helper: Sort Crypto Cards (.market-grid)
+      function sortCryptoCards(metric, asc) {
+        const grid = document.querySelector('.market-grid');
+        const cards = Array.from(grid.querySelectorAll('.market-card'));
+
+        cards.sort((a, b) => {
+          if (metric === 'change') {
+            // Parses the percentage from the 24h change element
+            const valA = parseFloat(a.querySelectorAll('.market-card__field-val')[1].textContent.replace(/[^0-9.-]+/g, ""));
+            const valB = parseFloat(b.querySelectorAll('.market-card__field-val')[1].textContent.replace(/[^0-9.-]+/g, ""));
+            return asc ? valA - valB : valB - valA;
+          } else if (metric === 'volume') {
+            // Note: Uses Price as a proxy since Volume is not explicitly shown on crypto cards
+            const valA = parseFloat(a.querySelectorAll('.market-card__field-val')[0].textContent.replace(/[^0-9.-]+/g, ""));
+            const valB = parseFloat(b.querySelectorAll('.market-card__field-val')[0].textContent.replace(/[^0-9.-]+/g, ""));
+            return asc ? valA - valB : valB - valA;
+          }
+          return 0;
+        });
+
+        // Re-append sorted cards to the DOM
+        cards.forEach(card => grid.appendChild(card));
       }
-    }
-    
-    // Initial render
-    document.addEventListener('DOMContentLoaded', renderMarketsHistory);
-    window.renderMarketsHistory = renderMarketsHistory;
+
+      // Helper: Sort Forex Table Rows (.market-table)
+      function sortForexTable(colIndex, asc) {
+        const tbody = document.querySelector('.market-table tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        rows.sort((a, b) => {
+          const textA = a.children[colIndex].textContent.replace(/[^0-9.-]+/g, "");
+          const textB = b.children[colIndex].textContent.replace(/[^0-9.-]+/g, "");
+          const valA = parseFloat(textA) || 0;
+          const valB = parseFloat(textB) || 0;
+          return asc ? valA - valB : valB - valA;
+        });
+
+        rows.forEach(row => tbody.appendChild(row));
+      }
+
+      // Helper: Update FontAwesome sort icons visually
+      function updateButtonIcon(btn, asc) {
+        const icon = btn.querySelector('i');
+        if (icon) {
+          icon.className = asc ? 'fa-solid fa-sort-up' : 'fa-solid fa-sort-down';
+        }
+      }
+    });
+
+    // --- 3. FAKE TRADING ENGINE ---
+    window.executeTrade = function(asset, currentPrice) {
+      const action = prompt(`Trade ${asset} (Current Price: $${currentPrice})\nEnter 'Buy' or 'Sell':`, 'Buy');
+      if (!action || (action.toLowerCase() !== 'buy' && action.toLowerCase() !== 'sell')) {
+        return;
+      }
+
+      const sizeStr = prompt(`Enter quantity of ${asset} to ${action}:`, '1');
+      const size = parseFloat(sizeStr);
+
+      if (isNaN(size) || size <= 0) {
+        alert('Invalid quantity.');
+        return;
+      }
+
+      const cost = size * currentPrice;
+      let balance = parseFloat(localStorage.getItem('fakeBalance') || '100000');
+      let positions = JSON.parse(localStorage.getItem('openPositions') || '[]');
+
+      if (action.toLowerCase() === 'buy') {
+        if (balance >= cost) {
+          balance -= cost;
+          positions.push({
+            asset: asset,
+            type: 'Buy',
+            size: size,
+            entryPrice: currentPrice,
+            timestamp: Date.now()
+          });
+          localStorage.setItem('fakeBalance', balance.toString());
+          localStorage.setItem('openPositions', JSON.stringify(positions));
+          alert(`Successfully bought ${size} ${asset} for $${cost.toFixed(2)}.`);
+        } else {
+          alert('Insufficient Fake USD balance for this trade.');
+        }
+      } else {
+          positions.push({
+            asset: asset,
+            type: 'Sell',
+            size: size,
+            entryPrice: currentPrice,
+            timestamp: Date.now()
+          });
+          localStorage.setItem('openPositions', JSON.stringify(positions));
+          alert(`Successfully shorted ${size} ${asset}.`);
+      }
+    };
   </script>
 </body>
 </html>

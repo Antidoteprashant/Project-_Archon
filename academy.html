@@ -21,8 +21,7 @@
     <input type="checkbox" id="nav-toggle" class="sr-only">
     <div class="nav__inner">
       <a href="index.html" class="nav__logo">
-        <div class="nav__logo-icon">A</div>
-        <div class="nav__logo-text">Archon</div>
+        <img src="images/logo.jpg" alt="Archon" class="nav__logo-img">
       </a>
       <nav class="nav__links">
         <a href="index.html" class="nav__link">Home</a>
@@ -173,5 +172,27 @@
     </div>
   </footer>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.querySelector('.academy-search input');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const query = e.target.value.toLowerCase().trim();
+
+          const topics = document.querySelectorAll('.topic-card');
+          topics.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            card.style.display = text.includes(query) ? '' : 'none';
+          });
+
+          const courses = document.querySelectorAll('.course-card');
+          courses.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            card.style.display = text.includes(query) ? '' : 'none';
+          });
+        });
+      }
+    });
+  </script>
 </body>
 </html>

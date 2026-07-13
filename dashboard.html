@@ -18,8 +18,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <a href="index.html" class="sidebar__logo">
-        <div class="sidebar__logo-icon">A</div>
-        <div class="sidebar__logo-text">Archon</div>
+        <img src="images/logo.jpg" alt="Archon" class="sidebar__logo-img">
       </a>
       
       <div class="sidebar__section">
@@ -29,29 +28,41 @@
 <a href="markets.html" class="sidebar__nav-item">
   <i class="fa-solid fa-chart-line sidebar__nav-icon"></i> Trading
 </a>
-<a href="coming-soon.html" class="sidebar__nav-item">
+<a href="wallet.html" class="sidebar__nav-item">
   <i class="fa-solid fa-wallet sidebar__nav-icon"></i> Wallet
 </a>
 <a href="coming-soon.html" class="sidebar__nav-item">
   <i class="fa-solid fa-clock-rotate-left sidebar__nav-icon"></i> History
+</a>
+<a href="coming-soon.html" class="sidebar__nav-item">
+  <i class="fa-solid fa-robot sidebar__nav-icon"></i> Trading Bots
+</a>
+<a href="coming-soon.html" class="sidebar__nav-item">
+  <i class="fa-solid fa-bullseye sidebar__nav-icon"></i> Alerts <span class="sidebar__nav-badge sidebar__nav-badge--green">2</span>
 </a>
       </div>
 
       <!-- User Profile -->
       <div class="sidebar__user">
         <div class="sidebar__user-avatar">JD</div>
-        <a href="coming-soon.html" class="sidebar__nav-item">
-  <i class="fa-solid fa-robot sidebar__nav-icon"></i> Trading Bots
-</a>
-<a href="coming-soon.html" class="sidebar__nav-item">
-  <i class="fa-solid fa-bullseye sidebar__nav-icon"></i> Alerts <span class="sidebar__nav-badge sidebar__nav-badge--green">2</span>
-</a>
+        
         <div>
           <div class="sidebar__user-name">John Doe</div>
           <div class="sidebar__user-role">Pro Account</div>
         </div>
 
-        <i class="fa-solid fa-ellipsis-vertical sidebar__user-menu"></i>
+        
+        <i class="fa-solid fa-ellipsis-vertical sidebar__user-menu" id="profileMenuToggle" style="cursor: pointer;"></i>
+        <div class="sidebar__dropdown" id="profileDropdown">
+          <a href="account-settings.html" class="sidebar__dropdown-item"><i class="fa-solid fa-user-gear"></i> Manage Trading Account</a>
+          <a href="transaction-history.html" class="sidebar__dropdown-item"><i class="fa-solid fa-clock-rotate-left"></i> Purchase & Transaction History</a>
+          <a href="portfolio-reports.html" class="sidebar__dropdown-item"><i class="fa-solid fa-file-invoice"></i> Portfolio Reports</a>
+          <a href="security-settings.html" class="sidebar__dropdown-item"><i class="fa-solid fa-shield-halved"></i> Security & Privacy Settings</a>
+          <a href="billing.html" class="sidebar__dropdown-item"><i class="fa-solid fa-credit-card"></i> Subscription & Billing</a>
+          <div class="sidebar__dropdown-divider"></div>
+          <a href="#" id="logoutBtn" class="sidebar__dropdown-item text-danger" style="color: #ef4444;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</a>
+        </div>
+
         
       </div>
     </aside>
@@ -131,7 +142,7 @@
               <div class="overview-card__label">Total Balance</div>
               <i class="fa-solid fa-wallet text-muted"></i>
             </div>
-            <div class="overview-card__value">$124,560.80</div>
+            <div class="overview-card__value" id="dashTotalBalance">$124,560.80</div>
             <div class="overview-card__change">
               <span class="overview-card__trend trend--up"><i class="fa-solid fa-arrow-up"></i> 12.4%</span> vs last month
             </div>
@@ -142,9 +153,9 @@
               <div class="overview-card__label">24h P&L</div>
               <i class="fa-solid fa-chart-line text-muted"></i>
             </div>
-            <div class="overview-card__value text-primary">+$1,240.50</div>
+            <div class="overview-card__value text-primary" id="dashPnl">+$1,240.50</div>
             <div class="overview-card__change">
-              <span class="overview-card__trend trend--up"><i class="fa-solid fa-arrow-up"></i> 1.2%</span> today
+              <span class="overview-card__trend trend--up" id="dashPnlPercent"><i class="fa-solid fa-arrow-up"></i> 1.2%</span> today
             </div>
           </div>
           
@@ -153,7 +164,7 @@
               <div class="overview-card__label">Active Orders</div>
               <i class="fa-solid fa-layer-group text-muted"></i>
             </div>
-            <div class="overview-card__value">8</div>
+            <div class="overview-card__value" id="dashActiveOrders">8</div>
             <div class="overview-card__change">
               5 Limit, 3 Stop-Loss
             </div>
@@ -168,10 +179,10 @@
             <div class="grid grid-2 gap-5">
               <div class="wallet-card">
                 <div class="wallet-card__label">Available USD</div>
-                <div class="wallet-card__balance">$45,200.00</div>
+                <div class="wallet-card__balance" id="dashWalletBalance">$45,200.00</div>
                 <div class="wallet-card__actions mt-4">
-                  <button class="btn btn-primary btn-sm">Deposit</button>
-                  <button class="btn btn-ghost btn-sm">Withdraw</button>
+                  <button class="btn btn-primary btn-sm" id="btnDeposit" onclick="handleDepositClick()">Deposit</button>
+                  <button class="btn btn-ghost btn-sm" id="btnWithdraw" onclick="handleWithdrawClick()">Withdraw</button>
                 </div>
               </div>
               
@@ -227,37 +238,8 @@
                       <th>Unrealized P&L</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="pos-asset">
-                          <div class="pos-asset__icon" style="background:#F7931A;color:#fff;"><i class="fa-brands fa-bitcoin"></i></div>
-                          <div>
-                            <div class="pos-asset__name">BTC/USD</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td><span class="pos-type pos-type--long">Long</span></td>
-                      <td>0.5 BTC</td>
-                      <td>$62,100.00</td>
-                      <td>$64,230.50</td>
-                      <td class="pos-pnl up">+$1,065.25</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="pos-asset">
-                          <div class="pos-asset__icon" style="background:#627EEA;color:#fff;"><i class="fa-brands fa-ethereum"></i></div>
-                          <div>
-                            <div class="pos-asset__name">ETH/USD</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td><span class="pos-type pos-type--short">Short</span></td>
-                      <td>10 ETH</td>
-                      <td>$3,600.00</td>
-                      <td>$3,450.20</td>
-                      <td class="pos-pnl up">+$1,498.00</td>
-                    </tr>
+                  <tbody id="positions-body">
+                    <!-- Positions will be injected here by JS -->
                   </tbody>
                 </table>
               </div>
@@ -479,63 +461,239 @@
         }
       });
     }
+    // Profile Menu Toggle Logic
+    const profileMenuToggle = document.getElementById('profileMenuToggle');
+    const profileDropdown = document.getElementById('profileDropdown');
+    
+    if (profileMenuToggle && profileDropdown) {
+      profileMenuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('show');
+      });
 
-    // Load trades from localStorage
-    function renderTrades() {
-      const trades = JSON.parse(localStorage.getItem('archon_trades') || '[]');
-      if (trades.length === 0) return;
+      document.addEventListener('click', (e) => {
+        if (!profileDropdown.contains(e.target) && e.target !== profileMenuToggle) {
+          profileDropdown.classList.remove('show');
+        }
+      });
+    }
 
-      const positionsBody = document.querySelector('.positions-table tbody');
+    // Log Out Logic
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('currentUserEmail');
+        window.location.href = 'login.html';
+      });
+    }
+
+    // Auth Check & User Data Population
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+      // Disabled for testing purposes
+      // window.location.href = 'login.html';
+    }
+
+    const currentUserEmail = localStorage.getItem('currentUserEmail');
+    let usersData = JSON.parse(localStorage.getItem('usersData') || '{}');
+    const userData = usersData[currentUserEmail];
+
+    if (userData) {
+      const userName = userData.name;
+      const firstName = userName.split(' ')[0];
+      
+      // Update Name & Avatar
+      const sidebarNameEl = document.querySelector('.sidebar__user-name');
+      if (sidebarNameEl) sidebarNameEl.textContent = userName;
+      
+      const greetingEl = document.querySelector('.dash-topbar__greeting-name');
+      if (greetingEl) greetingEl.textContent = `Welcome back, ${firstName}! 👋`;
+      
+      const avatarEl = document.querySelector('.sidebar__user-avatar');
+      if (avatarEl) {
+        const initials = userName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        avatarEl.textContent = initials;
+      }
+
+      // Update Dashboard Stats with specific user data
+      if (userData.dashboard) {
+        const balanceEl = document.getElementById('dashTotalBalance');
+        if (balanceEl) balanceEl.textContent = userData.dashboard.balance;
+
+        const pnlEl = document.getElementById('dashPnl');
+        if (pnlEl) pnlEl.textContent = userData.dashboard.pnl;
+
+        const pnlPercentEl = document.getElementById('dashPnlPercent');
+        if (pnlPercentEl) {
+          pnlPercentEl.innerHTML = `<i class="fa-solid fa-arrow-up"></i> ${userData.dashboard.pnlPercent}`;
+        }
+
+        const ordersEl = document.getElementById('dashActiveOrders');
+        if (ordersEl) ordersEl.textContent = userData.dashboard.activeOrders;
+      }
+
+      // Update wallet balance to match total balance for mockup
+      const walletEl = document.getElementById('dashWalletBalance');
+      if (walletEl) walletEl.textContent = userData.dashboard.balance;
+
+      // Deposit / Withdraw Logic
+      const btnDeposit = document.getElementById('btnDeposit');
+      const btnWithdraw = document.getElementById('btnWithdraw');
+
+      function parseBalance(balStr) {
+        return parseFloat(balStr.replace(/[^0-9.-]+/g,""));
+      }
+
+      function formatBalance(num) {
+        return '$' + num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      }
+
+      function updateBalance(amount, type) {
+        let currentBalance = parseBalance(userData.dashboard.balance);
+        let newBalance = currentBalance + amount;
+        
+        if (newBalance < 0) {
+          alert("Insufficient funds!");
+          return;
+        }
+
+        if (!userData.transactions) userData.transactions = [];
+        const today = new Date().toISOString().split('T')[0];
+        userData.transactions.unshift({
+          date: today,
+          type: type,
+          amount: (amount > 0 ? '+' : '-') + formatBalance(Math.abs(amount)),
+          status: 'Completed'
+        });
+
+        userData.dashboard.balance = formatBalance(newBalance);
+        usersData[currentUserEmail] = userData;
+        localStorage.setItem('usersData', JSON.stringify(usersData));
+
+        const balEl = document.getElementById('dashTotalBalance');
+        if (balEl) balEl.textContent = userData.dashboard.balance;
+        if (walletEl) walletEl.textContent = userData.dashboard.balance;
+      }
+
+      window.handleDepositClick = function() {
+        let amount = prompt("How much would you like to deposit?", "1000");
+        if (amount !== null) {
+          let parsed = parseBalance(amount);
+          if (!isNaN(parsed)) updateBalance(parsed, 'Deposit');
+        }
+      };
+
+      window.handleWithdrawClick = function() {
+        let amount = prompt("How much would you like to withdraw?", "100");
+        if (amount !== null) {
+          let parsed = parseBalance(amount);
+          if (!isNaN(parsed)) updateBalance(-parsed, 'Withdrawal');
+        }
+      };
+    }
+
+    // Fake Trading Engine Logic
+    function formatCurrency(num) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
+    }
+
+    function initTradingSystem() {
+      if (!localStorage.getItem('fakeBalance')) {
+        localStorage.setItem('fakeBalance', '100000'); // Start with $100k
+      }
+      if (!localStorage.getItem('openPositions')) {
+        localStorage.setItem('openPositions', JSON.stringify([]));
+      }
+      updateDashboardUI();
+    }
+
+    function updateDashboardUI() {
+      const balance = parseFloat(localStorage.getItem('fakeBalance'));
+      const positions = JSON.parse(localStorage.getItem('openPositions'));
+
+      const availableUsdEl = document.getElementById('available-usd');
+      const totalBalanceEl = document.getElementById('total-balance');
+      const positionsBody = document.getElementById('positions-body');
+
+      if (availableUsdEl) availableUsdEl.textContent = formatCurrency(balance);
+      
+      let totalPortfolioValue = balance;
+      
       if (positionsBody) {
-        trades.slice().forEach(trade => {
-          const tr = document.createElement('tr');
-          const color = trade.ticker === 'BTC' ? '#F7931A' : trade.ticker === 'ETH' ? '#627EEA' : trade.ticker === 'SOL' ? '#9945FF' : '#555';
-          const icon = trade.ticker === 'BTC' ? '<i class="fa-brands fa-bitcoin"></i>' : trade.ticker === 'ETH' ? '<i class="fa-brands fa-ethereum"></i>' : trade.ticker === 'SOL' ? 'S' : '<i class="fa-solid fa-coins"></i>';
+        positionsBody.innerHTML = '';
+        positions.forEach((pos, index) => {
+          const currentPrice = pos.entryPrice; // Simplified: assuming current price is entry price for demo
+          const positionValue = pos.size * currentPrice;
           
+          if (pos.type === 'Buy') {
+            totalPortfolioValue += positionValue;
+          }
+
+          const tr = document.createElement('tr');
           tr.innerHTML = `
             <td>
               <div class="pos-asset">
-                <div class="pos-asset__icon" style="background:${color};color:#fff;">${icon}</div>
+                <div class="pos-asset__icon" style="background:#333;color:#fff;">${pos.asset[0]}</div>
                 <div>
-                  <div class="pos-asset__name">${trade.assetName}</div>
+                  <div class="pos-asset__name">${pos.asset}/USD</div>
                 </div>
               </div>
             </td>
-            <td><span class="pos-type pos-type--${trade.type.toLowerCase()}">${trade.type}</span></td>
-            <td>${trade.size} ${trade.ticker}</td>
-            <td>$${trade.entryPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-            <td>$${trade.currentPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-            <td class="pos-pnl up">$0.00</td>
+            <td><span class="pos-type pos-type--${pos.type === 'Buy' ? 'long' : 'short'}">${pos.type}</span></td>
+            <td>${pos.size} ${pos.asset}</td>
+            <td>${formatCurrency(pos.entryPrice)}</td>
+            <td>${formatCurrency(currentPrice)}</td>
+            <td class="pos-pnl up">+$0.00</td>
           `;
-          positionsBody.insertBefore(tr, positionsBody.firstChild);
+          positionsBody.appendChild(tr);
         });
       }
 
-      const timeline = document.querySelector('.timeline');
-      if (timeline) {
-        trades.slice().forEach(trade => {
-          const item = document.createElement('div');
-          item.className = 'timeline-item';
-          const diffMin = Math.round((Date.now() - trade.timestamp) / 60000);
-          const timeStr = diffMin < 1 ? 'Just now' : diffMin < 60 ? `${diffMin}m ago` : `${Math.floor(diffMin/60)}h ago`;
-          
-          item.innerHTML = `
-            <div class="timeline-item__dot timeline-item__dot--buy" style="background: rgba(0, 230, 118, 0.15); color: var(--primary);"><i class="fa-solid fa-arrow-down"></i></div>
-            <div class="timeline-item__content">
-              <div class="timeline-item__title">Bought ${trade.ticker}</div>
-              <div class="timeline-item__desc">${trade.size} ${trade.ticker} at $${trade.entryPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
-            </div>
-            <div class="timeline-item__time">${timeStr}</div>
-          `;
-          timeline.insertBefore(item, timeline.firstChild);
-        });
-      }
+      if (totalBalanceEl) totalBalanceEl.textContent = formatCurrency(totalPortfolioValue);
     }
 
-    // Call render trades
-    renderTrades();
+    document.getElementById('deposit-btn')?.addEventListener('click', () => {
+      const amountStr = prompt('Enter amount to deposit (USD):', '1000');
+      if (amountStr) {
+        const amount = parseFloat(amountStr);
+        if (!isNaN(amount) && amount > 0) {
+          const currentBalance = parseFloat(localStorage.getItem('fakeBalance'));
+          localStorage.setItem('fakeBalance', (currentBalance + amount).toString());
+          
+          let txs = JSON.parse(localStorage.getItem('walletTransactions') || '[]');
+          txs.push({ type: 'Deposit', amount: amount, timestamp: Date.now() });
+          localStorage.setItem('walletTransactions', JSON.stringify(txs));
 
+          updateDashboardUI();
+        } else {
+          alert('Invalid amount entered.');
+        }
+      }
+    });
+
+    document.getElementById('withdraw-btn')?.addEventListener('click', () => {
+      const amountStr = prompt('Enter amount to withdraw (USD):', '1000');
+      if (amountStr) {
+        const amount = parseFloat(amountStr);
+        const currentBalance = parseFloat(localStorage.getItem('fakeBalance'));
+        if (!isNaN(amount) && amount > 0 && amount <= currentBalance) {
+          localStorage.setItem('fakeBalance', (currentBalance - amount).toString());
+          
+          let txs = JSON.parse(localStorage.getItem('walletTransactions') || '[]');
+          txs.push({ type: 'Withdraw', amount: amount, timestamp: Date.now() });
+          localStorage.setItem('walletTransactions', JSON.stringify(txs));
+
+          updateDashboardUI();
+        } else {
+          alert('Invalid amount or insufficient balance.');
+        }
+      }
+    });
+
+    initTradingSystem();
   </script>
+
 
 </body>
 </html>

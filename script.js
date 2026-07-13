@@ -1,48 +1,46 @@
 const overlay = document.querySelector(".overlay");
 const authContainer = document.querySelector(".auth-container");
-// Target the password input specifically by its id from register.html
-const passInput = document.querySelector("#password");
-const passGroup = passInput ? passInput.closest('.form-group') : null;
-let errorMessage = null;
 
-
-if (overlay) {
+if (overlay && authContainer) {
     overlay.addEventListener("click", () => {
-    overlay.classList.add("hidden");
-    window.location.href = "index.html";
-});
-}
+        overlay.classList.add("hidden");
+        window.location.href = "index.html";
+    });
 
-
-
-if (authContainer) {
     authContainer.addEventListener("click", (event) => {
-    event.stopPropagation();
-});
+        event.stopPropagation();
+    });
 }
+// Newsletter Subscribe
+const subscribeBtn = document.getElementById("subscribeBtn");
+const newsletterEmail = document.getElementById("newsletterEmail");
 
+if (subscribeBtn && newsletterEmail) {
+    subscribeBtn.addEventListener("click", function () {
+        const email = newsletterEmail.value.trim();
 
-//add an event listener that listens to the input that the user types in the password field and checks if the password is strong or not, and generate an error message if the password is weak.
-
-if (passInput) {
-    passInput.addEventListener("input", () => {
-        const password = passInput.value;
-        const isWeak = password.length < 8 || !/[!@#$%^&*]/.test(password) || !/[A-Z]/.test(password);
-
-        if (!errorMessage && passGroup) {
-            errorMessage = document.createElement("p");
-            errorMessage.classList.add("error-message");
-            errorMessage.style.color = "red";
-            errorMessage.style.marginTop = "8px";
-            passGroup.appendChild(errorMessage);
+        if (email === "") {
+            alert("Please enter your email.");
+            return;
         }
 
-        if (isWeak && errorMessage) {
-            errorMessage.textContent = "This password is weak, please input a strong password.";
-            errorMessage.style.display = "block";
-        } else if (errorMessage) {
-            errorMessage.textContent = "";
-            errorMessage.style.display = "none";
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(email)) {
+            alert("Please enter a valid email address.");
+            return;
         }
+
+        subscribeBtn.disabled = true;
+        subscribeBtn.textContent = "Subscribing...";
+
+        setTimeout(() => {
+            alert("Thank you for subscribing!");
+
+            newsletterEmail.value = "";
+
+            subscribeBtn.disabled = false;
+            subscribeBtn.textContent = "Subscribe";
+        }, 1000);
     });
 }

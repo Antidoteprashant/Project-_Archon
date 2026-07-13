@@ -47,8 +47,7 @@
     
     <div class="nav__inner">
       <a href="index.html" class="nav__logo">
-        <div class="nav__logo-icon">A</div>
-        <div class="nav__logo-text">Archon</div>
+        <img src="images/logo.jpg" alt="Archon" class="nav__logo-img">
       </a>
 
       <nav class="nav__links">
@@ -612,11 +611,22 @@
           <h2 class="newsletter__title">Stay Ahead of the Market</h2>
           <p class="newsletter__subtitle">Join 100,000+ traders receiving our weekly market analysis and platform updates.</p>
         </div>
-        <div class="newsletter-form">
-          <div class="newsletter-form__row">
-            <input type="email" class="newsletter-form__input" placeholder="Enter your email address...">
-            <button class="btn btn-primary btn-lg">Subscribe</button>
-          </div>
+        <div class="newsletter-form__row">
+    <input
+        type="email"
+        id="newsletterEmail"
+        class="newsletter-form__input"
+        placeholder="Enter your email address..."
+    >
+
+    <button
+        id="subscribeBtn"
+        class="btn btn-primary btn-lg"
+    >
+        Subscribe
+    </button>
+</div>
+          
           <p class="newsletter-form__note">No spam, ever. Unsubscribe at any time.</p>
         </div>
       </div>
@@ -630,8 +640,7 @@
         
         <div class="footer__brand">
           <a href="index.html" class="footer__brand-logo">
-            <div class="footer__brand-icon">A</div>
-            <div class="footer__brand-name">Archon</div>
+            <img src="images/logo.jpg" alt="Archon" class="footer__logo-img">
           </a>
           <p class="footer__brand-tagline">The premium trading platform built for serious investors and traders globally.</p>
           <div class="footer__socials">
@@ -767,6 +776,6 @@
       });
     })();
   </script>
-
+<script src="script.js"></script>
 </body>
 </html>
