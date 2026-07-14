@@ -4,14 +4,14 @@ A modern, premium trading platform user interface built purely with semantic HTM
 
 ## 🌟 Features
 
-- **Strictly HTML5 & CSS3**: No JS, Bootstrap, or Tailwind required.
+- **Modern Web Technologies**: Built with HTML5, CSS3, and Vanilla JavaScript. No bloated frameworks like Bootstrap or Tailwind required.
 - **Premium Aesthetics**: Dark professional theme featuring glassmorphism, smooth gradients, and soft shadows.
 - **Fully Responsive**: Mobile-first approach scaling up beautifully to tablet and desktop.
-- **CSS-Only Interactivity**:
+- **Interactivity & UI**:
   - Interactive mobile navigation drawer (using the CSS checkbox hack).
   - Expanding/collapsing FAQ accordion.
   - Animated billing toggle switch.
-- **CSS-Only Visualizations**:
+- **Visualizations**:
   - Hero section Candlestick Chart.
   - Portfolio Allocation Donut Chart.
   - P&L Area and Bar Charts.
@@ -30,6 +30,14 @@ A modern, premium trading platform user interface built purely with semantic HTM
 ├── contact.html        # Contact Form & Locations
 ├── login.html          # User Authentication (Login)
 ├── register.html       # User Authentication (Sign Up)
+├── wallet.html         # Wallet UI
+├── portfolio-reports.html # Portfolio Reports
+├── account-settings.html # Account Settings
+├── billing.html        # Billing Information
+├── security-settings.html # Security Settings
+├── transaction-history.html # Transaction History
+├── script.js           # Core Interactivity & Auth Logic
+├── trading.js          # Trading Modal & Mock Execution
 └── css/
     ├── variables.css   # Design tokens (Colors, Typography, Spacing)
     ├── base.css        # Resets, Globals, Utility classes, Animations
@@ -47,7 +55,7 @@ A modern, premium trading platform user interface built purely with semantic HTM
 
 ## 🚀 Getting Started
 
-Because this project is built entirely with static HTML and CSS, there are no dependencies to install or build processes to run.
+Because this project is built entirely with static HTML, CSS, and Vanilla JS, there are no dependencies to install or build processes to run.
 
 ### Option 1: Direct File Viewing
 Simply navigate to the project directory in your file explorer and double-click `index.html` to open it in your default web browser.
