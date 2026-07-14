@@ -46,6 +46,7 @@
     <!-- Form Side -->
     <div class="auth-form-wrap">
       <div class="auth-header">
+        <button class="theme-toggle btn btn-icon" style="background:none;border:none;color:var(--text-primary);cursor:pointer;font-size:1.2rem;margin-right:1rem;"><i class="fa-solid fa-sun"></i></button>
         <h1>Create Account</h1>
         <p>Set up your free Archon account in seconds</p>
       </div>
@@ -53,22 +54,22 @@
       <form class="auth-form" id="registrationForm">
         <div class="auth-form-row">
           <div class="form-group">
-            <label class="form-label">First Name</label>
+            <label for="firstName" class="form-label">First Name</label>
             <input type="text" id="firstName" class="form-input" placeholder="John" required>
           </div>
           <div class="form-group">
-            <label class="form-label">Last Name</label>
+            <label for="lastName" class="form-label">Last Name</label>
             <input type="text" id="lastName" class="form-input" placeholder="Doe" required>
           </div>
         </div>
         
         <div class="form-group">
-          <label class="form-label">Email Address</label>
+          <label for="email" class="form-label">Email Address</label>
           <input type="email" id="email" class="form-input" placeholder="name@example.com" required>
         </div>
         
         <div class="form-group">
-          <label class="form-label">Password</label>
+          <label for="password" class="form-label">Password</label>
           <div class="input-icon-wrap">
             <input
             id="password"
@@ -81,7 +82,7 @@
         </div>
         
         <div class="form-group">
-          <label class="form-label">Confirm Password</label>
+          <label for="confirmPassword" class="form-label">Confirm Password</label>
           <div class="input-icon-wrap">
             <input
             id="confirmPassword"
@@ -93,9 +94,9 @@
           </div>
         </div>
         
-        <label class="auth-checkbox" style="align-items: flex-start; margin-top: var(--space-2);">
+        <label for="termsCheckbox" class="auth-checkbox" style="align-items: flex-start; margin-top: var(--space-2);">
           <input type="checkbox" id="termsCheckbox" style="margin-top: 4px;" required>
-          <span class="text-xs leading-relaxed">I agree to the <a href="#" class="auth-link">Terms of Service</a> and <a href="#" class="auth-link">Privacy Policy</a>, and confirm I am over 18 years old.</span>
+          <span class="text-xs leading-relaxed">I agree to the <a href="coming-soon.html" class="auth-link">Terms of Service</a> and <a href="coming-soon.html" class="auth-link">Privacy Policy</a>, and confirm I am over 18 years old.</span>
         </label>
         
         <button type="submit" class="btn btn-primary btn-lg" style="margin-top: var(--space-4);">Create Account</button>

@@ -249,4 +249,35 @@ if (officeMap && googleMapsLink) {
     });
 }
 
+// Theme Toggle Logic
+document.addEventListener("DOMContentLoaded", () => {
+    const currentTheme = localStorage.getItem("theme");
+    if (currentTheme === "light") {
+        document.documentElement.setAttribute("data-theme", "light");
+    }
+
+    const themeToggleBtns = document.querySelectorAll(".theme-toggle");
+    themeToggleBtns.forEach(btn => {
+        // Set initial icon
+        if (currentTheme === "light") {
+            btn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+        } else {
+            btn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+        }
+
+        btn.addEventListener("click", () => {
+            let theme = document.documentElement.getAttribute("data-theme");
+            
+            if (theme === "light") {
+                document.documentElement.removeAttribute("data-theme");
+                localStorage.setItem("theme", "dark");
+                themeToggleBtns.forEach(b => b.innerHTML = '<i class="fa-solid fa-sun"></i>');
+            } else {
+                document.documentElement.setAttribute("data-theme", "light");
+                localStorage.setItem("theme", "light");
+                themeToggleBtns.forEach(b => b.innerHTML = '<i class="fa-solid fa-moon"></i>');
+            }
+        });
+    });
+});
 
