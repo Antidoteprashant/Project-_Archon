@@ -246,6 +246,32 @@
         </div>
       </div>
 
+      <!-- Order History Section -->
+      <div class="market-section" id="order-history-section" style="display: none; margin-top: 4rem;">
+        <h2 class="market-section__title" style="margin-bottom: 1.5rem;">
+          <div class="market-section__icon icon-frame" style="background: rgba(255,255,255,0.05); color: var(--text-secondary);"><i class="fa-solid fa-clock-rotate-left"></i></div>
+          Recent Order History
+        </h2>
+        
+        <div class="market-table-wrap">
+          <table class="market-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Asset</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Entry Price</th>
+                <th>Total Cost</th>
+              </tr>
+            </thead>
+            <tbody id="markets-order-history-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </section>
   </main>
 
@@ -399,5 +425,35 @@
 
   <script src="js/order-ticket.js"></script>
 
+      if (action.toLowerCase() === 'buy') {
+        if (balance >= cost) {
+          balance -= cost;
+          positions.push({
+            asset: asset,
+            type: 'Buy',
+            size: size,
+            entryPrice: currentPrice,
+            timestamp: Date.now()
+          });
+          localStorage.setItem('fakeBalance', balance.toString());
+          localStorage.setItem('openPositions', JSON.stringify(positions));
+          alert(`Successfully bought ${size} ${asset} for $${cost.toFixed(2)}.`);
+        } else {
+          alert('Insufficient Fake USD balance for this trade.');
+        }
+      } else {
+          positions.push({
+            asset: asset,
+            type: 'Sell',
+            size: size,
+            entryPrice: currentPrice,
+            timestamp: Date.now()
+          });
+          localStorage.setItem('openPositions', JSON.stringify(positions));
+          alert(`Successfully shorted ${size} ${asset}.`);
+      }
+    };
+  </script>
+  <script src="script.js"></script>
 </body>
 </html>
