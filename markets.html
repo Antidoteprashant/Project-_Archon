@@ -27,6 +27,7 @@
         <a href="index.html" class="nav__link">Home</a>
         <a href="markets.html" class="nav__link active">Markets</a>
         <a href="dashboard.html" class="nav__link">Dashboard</a>
+        <a href="order-history.html" class="nav__link">History</a>
         <a href="pricing.html" class="nav__link">Pricing</a>
         <a href="academy.html" class="nav__link">Academy</a>
       </nav>
@@ -46,6 +47,7 @@
       <a href="index.html" class="nav__mobile-link">Home</a>
       <a href="markets.html" class="nav__mobile-link active">Markets</a>
       <a href="dashboard.html" class="nav__mobile-link">Dashboard</a>
+      <a href="order-history.html" class="nav__mobile-link">History</a>
       <a href="pricing.html" class="nav__mobile-link">Pricing</a>
     </div>
   </header>
@@ -282,7 +284,149 @@
     </div>
   </footer>
 
-<!-- Script to fix Issue #108: Search and Filter functionality -->
+  <!-- Trade Dialog Modal -->
+  <dialog id="tradeDialog" class="trade-dialog" aria-labelledby="tradeAssetTitle" aria-modal="true">
+    <div class="trade-dialog__content">
+      <div class="trade-dialog__header">
+        <div class="trade-dialog__asset-info">
+          <div class="trade-dialog__asset-icon" id="tradeAssetIcon"><i class="fa-brands fa-bitcoin"></i></div>
+          <div>
+            <h3 class="trade-dialog__title" id="tradeAssetTitle">Bitcoin</h3>
+            <span class="trade-dialog__subtitle" id="tradeAssetTicker">BTC/USD</span>
+          </div>
+        </div>
+        <button type="button" class="trade-dialog__close" id="tradeCloseBtn" aria-label="Close dialog">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="trade-dialog__body">
+        <!-- Buy/Sell Toggle Tabs -->
+        <div class="trade-tabs">
+          <button type="button" class="trade-tab active" data-action="buy">Long (Buy)</button>
+          <button type="button" class="trade-tab" data-action="sell">Short (Sell)</button>
+        </div>
+
+        <!-- Inline Error Message Container -->
+        <div id="tradeErrorMsg" class="trade-error-msg" hidden></div>
+
+        <form class="trade-form" id="tradeForm">
+          <div class="trade-form__row">
+            <span class="trade-form__label">Available Balance</span>
+            <span class="trade-form__value" id="tradeWalletBalance">$0.00</span>
+          </div>
+          <div class="trade-form__row">
+            <span class="trade-form__label">Current Position</span>
+            <span class="trade-form__value" id="tradeAssetReserves">0.00 BTC</span>
+          </div>
+
+          <div class="trade-form__row">
+            <span class="trade-form__label">Current Price</span>
+            <span class="trade-form__value" id="tradeCurrentPrice">$0.00</span>
+          </div>
+
+          <div class="trade-form__group">
+            <label class="trade-form__label" for="tradeOrderType">Order Type</label>
+            <select class="trade-form__input" id="tradeOrderType">
+              <option value="market">Market Order</option>
+              <option value="limit">Limit Order</option>
+            </select>
+          </div>
+
+          <div class="trade-form__group" id="limitPriceGroup" style="display: none;">
+            <label class="trade-form__label" for="tradeLimitPrice">Limit Price (USD)</label>
+            <input type="number" class="trade-form__input" id="tradeLimitPrice" step="any" min="0">
+          </div>
+
+          <!-- Quantity and Notional in a grid -->
+          <div class="trade-form__grid-2">
+            <div class="trade-form__group">
+              <label class="trade-form__label" for="tradeAmount" id="tradeAmountLabel">Amount (BTC)</label>
+              <div class="trade-form__input-wrapper">
+                <input type="number" class="trade-form__input" id="tradeAmount" placeholder="0.00" step="any" min="0">
+                <span class="trade-form__input-suffix" id="tradeAssetSuffix">BTC</span>
+              </div>
+            </div>
+            <div class="trade-form__group">
+              <label class="trade-form__label" for="tradeNotional">Notional (USD)</label>
+              <div class="trade-form__input-wrapper">
+                <input type="number" class="trade-form__input" id="tradeNotional" placeholder="0.00" step="any" min="0">
+                <span class="trade-form__input-suffix">USD</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Leverage -->
+          <div class="trade-form__group">
+            <label class="trade-form__label" for="tradeLeverage">Leverage</label>
+            <select class="trade-form__input" id="tradeLeverage">
+              <option value="1">1x (No Leverage)</option>
+              <option value="2">2x</option>
+              <option value="5">5x</option>
+              <option value="10">10x</option>
+              <option value="20">20x</option>
+              <option value="50">50x</option>
+            </select>
+          </div>
+
+          <!-- Stop Loss and Take Profit -->
+          <div class="trade-form__grid-2">
+            <div class="trade-form__group">
+              <label class="trade-form__label" for="tradeStopLoss">Stop-Loss (USD)</label>
+              <input type="number" class="trade-form__input" id="tradeStopLoss" placeholder="Optional" step="any" min="0">
+            </div>
+            <div class="trade-form__group">
+              <label class="trade-form__label" for="tradeTakeProfit">Take-Profit (USD)</label>
+              <input type="number" class="trade-form__input" id="tradeTakeProfit" placeholder="Optional" step="any" min="0">
+            </div>
+          </div>
+
+          <div class="trade-form__divider"></div>
+
+          <!-- Live Risk Summary -->
+          <div class="trade-summary">
+            <div class="trade-summary__item">
+              <span class="trade-form__label">Margin Required</span>
+              <span class="trade-form__value" id="tradeMarginRequired">$0.00</span>
+            </div>
+            <div class="trade-summary__item">
+              <span class="trade-form__label">Est. Fee (0.1%)</span>
+              <span class="trade-form__value" id="tradeFee">$0.00</span>
+            </div>
+            <div class="trade-summary__item">
+              <span class="trade-form__label">Max Risk (SL)</span>
+              <span class="trade-form__value" id="tradeRisk">$0.00</span>
+            </div>
+            <div class="trade-summary__item">
+              <span class="trade-form__label">Max Reward (TP)</span>
+              <span class="trade-form__value" id="tradeReward">$0.00</span>
+            </div>
+            <div class="trade-summary__item">
+              <span class="trade-form__label">R:R Ratio</span>
+              <span class="trade-form__value" id="tradeRRRatio">-</span>
+            </div>
+            <div class="trade-summary__item">
+              <span class="trade-form__label">Bal. After Trade</span>
+              <span class="trade-form__value" id="tradeBalAfter">$0.00</span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full mt-4" id="tradeSubmitBtn">Place Paper Trade</button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Success Toast/Notification -->
+  <div id="tradeSuccessToast" class="trade-success-toast" hidden>
+    <div class="toast-icon"><i class="fa-solid fa-circle-check"></i></div>
+    <div class="toast-content">
+      <div class="toast-title">Trade Successful!</div>
+      <div class="toast-message" id="toastMessage">Bought 0.1 BTC successfully.</div>
+    </div>
+  </div>
+
+  <script src="js/order-ticket.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // --- 1. LIVE SEARCH FUNCTIONALITY ---
@@ -377,54 +521,6 @@
         }
       }
     });
-
-    // --- 3. FAKE TRADING ENGINE ---
-    window.executeTrade = function(asset, currentPrice) {
-      const action = prompt(`Trade ${asset} (Current Price: $${currentPrice})\nEnter 'Buy' or 'Sell':`, 'Buy');
-      if (!action || (action.toLowerCase() !== 'buy' && action.toLowerCase() !== 'sell')) {
-        return;
-      }
-
-      const sizeStr = prompt(`Enter quantity of ${asset} to ${action}:`, '1');
-      const size = parseFloat(sizeStr);
-
-      if (isNaN(size) || size <= 0) {
-        alert('Invalid quantity.');
-        return;
-      }
-
-      const cost = size * currentPrice;
-      let balance = parseFloat(localStorage.getItem('fakeBalance') || '100000');
-      let positions = JSON.parse(localStorage.getItem('openPositions') || '[]');
-
-      if (action.toLowerCase() === 'buy') {
-        if (balance >= cost) {
-          balance -= cost;
-          positions.push({
-            asset: asset,
-            type: 'Buy',
-            size: size,
-            entryPrice: currentPrice,
-            timestamp: Date.now()
-          });
-          localStorage.setItem('fakeBalance', balance.toString());
-          localStorage.setItem('openPositions', JSON.stringify(positions));
-          alert(`Successfully bought ${size} ${asset} for $${cost.toFixed(2)}.`);
-        } else {
-          alert('Insufficient Fake USD balance for this trade.');
-        }
-      } else {
-          positions.push({
-            asset: asset,
-            type: 'Sell',
-            size: size,
-            entryPrice: currentPrice,
-            timestamp: Date.now()
-          });
-          localStorage.setItem('openPositions', JSON.stringify(positions));
-          alert(`Successfully shorted ${size} ${asset}.`);
-      }
-    };
   </script>
   <script src="script.js"></script>
 </body>
