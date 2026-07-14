@@ -256,7 +256,7 @@
   </footer>
 
   <!-- Trade Dialog Modal -->
-  <dialog id="tradeDialog" class="trade-dialog">
+  <dialog id="tradeDialog" class="trade-dialog" aria-labelledby="tradeAssetTitle" aria-modal="true">
     <div class="trade-dialog__content">
       <div class="trade-dialog__header">
         <div class="trade-dialog__asset-info">
@@ -274,24 +274,28 @@
       <div class="trade-dialog__body">
         <!-- Buy/Sell Toggle Tabs -->
         <div class="trade-tabs">
-          <button type="button" class="trade-tab active" data-action="buy">Buy</button>
-          <button type="button" class="trade-tab" data-action="sell">Sell</button>
+          <button type="button" class="trade-tab active" data-action="buy">Long (Buy)</button>
+          <button type="button" class="trade-tab" data-action="sell">Short (Sell)</button>
         </div>
 
+        <!-- Inline Error Message Container -->
+        <div id="tradeErrorMsg" class="trade-error-msg" hidden></div>
+
         <form class="trade-form" id="tradeForm">
-          <!-- Balance Display -->
           <div class="trade-form__row">
             <span class="trade-form__label">Available Balance</span>
             <span class="trade-form__value" id="tradeWalletBalance">$0.00</span>
           </div>
-
-          <!-- Reserves Display -->
           <div class="trade-form__row">
             <span class="trade-form__label">Current Position</span>
             <span class="trade-form__value" id="tradeAssetReserves">0.00 BTC</span>
           </div>
 
-          <!-- Order Type -->
+          <div class="trade-form__row">
+            <span class="trade-form__label">Current Price</span>
+            <span class="trade-form__value" id="tradeCurrentPrice">$0.00</span>
+          </div>
+
           <div class="trade-form__group">
             <label class="trade-form__label" for="tradeOrderType">Order Type</label>
             <select class="trade-form__input" id="tradeOrderType">
@@ -300,44 +304,85 @@
             </select>
           </div>
 
-          <!-- Limit Price (Hidden by default) -->
           <div class="trade-form__group" id="limitPriceGroup" style="display: none;">
             <label class="trade-form__label" for="tradeLimitPrice">Limit Price (USD)</label>
             <input type="number" class="trade-form__input" id="tradeLimitPrice" step="any" min="0">
           </div>
 
-          <!-- Amount -->
-          <div class="trade-form__group">
-            <label class="trade-form__label" for="tradeAmount" id="tradeAmountLabel">Amount (BTC)</label>
-            <div class="trade-form__input-wrapper">
-              <input type="number" class="trade-form__input" id="tradeAmount" placeholder="0.00" step="any" min="0" required>
-              <span class="trade-form__input-suffix" id="tradeAssetSuffix">BTC</span>
+          <!-- Quantity and Notional in a grid -->
+          <div class="trade-form__grid-2">
+            <div class="trade-form__group">
+              <label class="trade-form__label" for="tradeAmount" id="tradeAmountLabel">Amount (BTC)</label>
+              <div class="trade-form__input-wrapper">
+                <input type="number" class="trade-form__input" id="tradeAmount" placeholder="0.00" step="any" min="0">
+                <span class="trade-form__input-suffix" id="tradeAssetSuffix">BTC</span>
+              </div>
+            </div>
+            <div class="trade-form__group">
+              <label class="trade-form__label" for="tradeNotional">Notional (USD)</label>
+              <div class="trade-form__input-wrapper">
+                <input type="number" class="trade-form__input" id="tradeNotional" placeholder="0.00" step="any" min="0">
+                <span class="trade-form__input-suffix">USD</span>
+              </div>
             </div>
           </div>
 
-          <!-- Price Indicator -->
-          <div class="trade-form__row">
-            <span class="trade-form__label">Current Price</span>
-            <span class="trade-form__value" id="tradeCurrentPrice">$0.00</span>
+          <!-- Leverage -->
+          <div class="trade-form__group">
+            <label class="trade-form__label" for="tradeLeverage">Leverage</label>
+            <select class="trade-form__input" id="tradeLeverage">
+              <option value="1">1x (No Leverage)</option>
+              <option value="2">2x</option>
+              <option value="5">5x</option>
+              <option value="10">10x</option>
+              <option value="20">20x</option>
+              <option value="50">50x</option>
+            </select>
+          </div>
+
+          <!-- Stop Loss and Take Profit -->
+          <div class="trade-form__grid-2">
+            <div class="trade-form__group">
+              <label class="trade-form__label" for="tradeStopLoss">Stop-Loss (USD)</label>
+              <input type="number" class="trade-form__input" id="tradeStopLoss" placeholder="Optional" step="any" min="0">
+            </div>
+            <div class="trade-form__group">
+              <label class="trade-form__label" for="tradeTakeProfit">Take-Profit (USD)</label>
+              <input type="number" class="trade-form__input" id="tradeTakeProfit" placeholder="Optional" step="any" min="0">
+            </div>
           </div>
 
           <div class="trade-form__divider"></div>
 
-          <!-- Summary Calculations -->
-          <div class="trade-form__row">
-            <span class="trade-form__label">Estimated Cost</span>
-            <span class="trade-form__value" id="tradeEstCost">$0.00</span>
-          </div>
-          <div class="trade-form__row">
-            <span class="trade-form__label">Trading Fee (0.1%)</span>
-            <span class="trade-form__value" id="tradeFee">$0.00</span>
-          </div>
-          <div class="trade-form__row trade-form__row--total">
-            <span class="trade-form__label">Total Cost</span>
-            <span class="trade-form__value" id="tradeTotalCost">$0.00</span>
+          <!-- Live Risk Summary -->
+          <div class="trade-summary">
+            <div class="trade-summary__item">
+              <span class="trade-form__label">Margin Required</span>
+              <span class="trade-form__value" id="tradeMarginRequired">$0.00</span>
+            </div>
+            <div class="trade-summary__item">
+              <span class="trade-form__label">Est. Fee (0.1%)</span>
+              <span class="trade-form__value" id="tradeFee">$0.00</span>
+            </div>
+            <div class="trade-summary__item">
+              <span class="trade-form__label">Max Risk (SL)</span>
+              <span class="trade-form__value" id="tradeRisk">$0.00</span>
+            </div>
+            <div class="trade-summary__item">
+              <span class="trade-form__label">Max Reward (TP)</span>
+              <span class="trade-form__value" id="tradeReward">$0.00</span>
+            </div>
+            <div class="trade-summary__item">
+              <span class="trade-form__label">R:R Ratio</span>
+              <span class="trade-form__value" id="tradeRRRatio">-</span>
+            </div>
+            <div class="trade-summary__item">
+              <span class="trade-form__label">Bal. After Trade</span>
+              <span class="trade-form__value" id="tradeBalAfter">$0.00</span>
+            </div>
           </div>
 
-          <button type="submit" class="btn btn-primary btn-full mt-4" id="tradeSubmitBtn">Confirm Trade</button>
+          <button type="submit" class="btn btn-primary btn-full mt-4" id="tradeSubmitBtn">Place Paper Trade</button>
         </form>
       </div>
     </div>
@@ -352,309 +397,7 @@
     </div>
   </div>
 
-  <!-- Trade Dialog Script -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const tradeButtons = document.querySelectorAll('.market-card__actions .btn, .market-table td .btn');
-      const tradeDialog = document.getElementById('tradeDialog');
-      const tradeCloseBtn = document.getElementById('tradeCloseBtn');
-      const tradeForm = document.getElementById('tradeForm');
-      
-      const tradeAssetIcon = document.getElementById('tradeAssetIcon');
-      const tradeAssetTitle = document.getElementById('tradeAssetTitle');
-      const tradeAssetTicker = document.getElementById('tradeAssetTicker');
-      const tradeWalletBalance = document.getElementById('tradeWalletBalance');
-      const tradeAssetReserves = document.getElementById('tradeAssetReserves');
-      const tradeOrderType = document.getElementById('tradeOrderType');
-      const limitPriceGroup = document.getElementById('limitPriceGroup');
-      const tradeLimitPrice = document.getElementById('tradeLimitPrice');
-      const tradeAmount = document.getElementById('tradeAmount');
-      const tradeAmountLabel = document.getElementById('tradeAmountLabel');
-      const tradeAssetSuffix = document.getElementById('tradeAssetSuffix');
-      const tradeCurrentPrice = document.getElementById('tradeCurrentPrice');
-      
-      const tradeEstCost = document.getElementById('tradeEstCost');
-      const tradeFee = document.getElementById('tradeFee');
-      const tradeTotalCost = document.getElementById('tradeTotalCost');
-      const tradeSubmitBtn = document.getElementById('tradeSubmitBtn');
-      
-      const tradeTabs = document.querySelectorAll('.trade-tab');
-      const tradeSuccessToast = document.getElementById('tradeSuccessToast');
-      const toastMessage = document.getElementById('toastMessage');
-
-      let currentAssetPrice = 0;
-      let currentAssetTicker = '';
-      let currentAssetName = '';
-      let isBuyMode = true;
-
-      // Check if user is logged in
-      function checkAuth() {
-        if (localStorage.getItem('isLoggedIn') !== 'true') {
-          window.location.href = 'login.html';
-          return false;
-        }
-        return true;
-      }
-
-      function getUserData() {
-        const currentUserEmail = localStorage.getItem('currentUserEmail');
-        let usersData = JSON.parse(localStorage.getItem('usersData') || '{}');
-        return { currentUserEmail, usersData, userData: usersData[currentUserEmail] };
-      }
-
-      function formatCurrency(num) {
-        return '$' + num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      }
-
-      function parseCurrency(str) {
-        return parseFloat(str.replace(/[^0-9.-]+/g,""));
-      }
-
-      // Display and initialize asset reserves
-      function updateReservesDisplay(userData) {
-        if (!userData) return;
-        if (!userData.reserves) {
-          userData.reserves = {
-            'BTC': 0.5,
-            'ETH': 10.0,
-            'SOL': 150.0
-          };
-        }
-        const currentQty = userData.reserves[currentAssetTicker] || 0;
-        tradeAssetReserves.textContent = `${currentQty.toFixed(4)} ${currentAssetTicker}`;
-      }
-
-      // Update calculations in the form
-      function updateCalculations() {
-        const amount = parseFloat(tradeAmount.value) || 0;
-        let price = currentAssetPrice;
-
-        if (tradeOrderType.value === 'limit') {
-          price = parseFloat(tradeLimitPrice.value) || 0;
-        }
-
-        const estCost = amount * price;
-        const fee = estCost * 0.001; // 0.1% fee
-        const total = isBuyMode ? (estCost + fee) : (estCost - fee);
-
-        tradeEstCost.textContent = formatCurrency(estCost);
-        tradeFee.textContent = formatCurrency(fee);
-        
-        const totalContainer = document.querySelector('.trade-form__row--total');
-        if (isBuyMode) {
-          totalContainer.classList.remove('sell-mode');
-          tradeTotalCost.textContent = formatCurrency(total);
-          document.getElementById('tradeTotalCost').style.color = 'var(--primary)';
-        } else {
-          totalContainer.classList.add('sell-mode');
-          tradeTotalCost.textContent = formatCurrency(Math.max(0, total));
-          document.getElementById('tradeTotalCost').style.color = 'var(--danger)';
-        }
-      }
-
-      // Handle trade buttons clicks
-      tradeButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (!checkAuth()) return;
-
-          const { userData } = getUserData();
-          if (userData && userData.dashboard) {
-            tradeWalletBalance.textContent = userData.dashboard.balance;
-          }
-
-          const card = btn.closest('.market-card');
-          if (card) {
-            currentAssetName = card.querySelector('.market-card__name').textContent.trim();
-            currentAssetTicker = card.querySelector('.market-card__ticker').textContent.trim();
-            const priceText = card.querySelector('.market-card__body .market-card__field-val').textContent.trim();
-            currentAssetPrice = parseCurrency(priceText);
-            
-            // Set icon class
-            const iconEl = card.querySelector('.market-card__icon');
-            tradeAssetIcon.className = 'trade-dialog__asset-icon ' + (iconEl ? iconEl.className : '');
-            tradeAssetIcon.innerHTML = iconEl ? iconEl.innerHTML : '';
-          } else {
-            // Row in table
-            const row = btn.closest('tr');
-            if (row) {
-              currentAssetName = row.querySelector('.fw-semibold').textContent.trim();
-              currentAssetTicker = currentAssetName;
-              const priceText = row.querySelector('.price-cell').textContent.trim();
-              currentAssetPrice = parseCurrency(priceText);
-              
-              // Set icon
-              const iconEl = row.querySelector('.market-card__icon');
-              tradeAssetIcon.className = 'trade-dialog__asset-icon ' + (iconEl ? iconEl.className : '');
-              tradeAssetIcon.innerHTML = iconEl ? iconEl.innerHTML : '';
-            }
-          }
-
-          // Populate modal
-          tradeAssetTitle.textContent = currentAssetName;
-          tradeAssetTicker.textContent = currentAssetTicker + '/USD';
-          tradeCurrentPrice.textContent = formatCurrency(currentAssetPrice);
-          tradeAmountLabel.textContent = `Amount (${currentAssetTicker})`;
-          tradeAssetSuffix.textContent = currentAssetTicker;
-          
-          tradeLimitPrice.value = currentAssetPrice;
-          tradeAmount.value = '';
-          tradeOrderType.value = 'market';
-          limitPriceGroup.style.display = 'none';
-          
-          // Default tab is Buy
-          isBuyMode = true;
-          tradeTabs.forEach(t => t.classList.remove('active'));
-          document.querySelector('.trade-tab[data-action="buy"]').classList.add('active');
-          tradeSubmitBtn.className = 'btn btn-primary btn-full mt-4';
-          tradeSubmitBtn.textContent = `Confirm Buy ${currentAssetTicker}`;
-
-          updateReservesDisplay(userData);
-          updateCalculations();
-          tradeDialog.showModal();
-        });
-      });
-
-      // Tabs click
-      tradeTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-          tradeTabs.forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-          isBuyMode = tab.getAttribute('data-action') === 'buy';
-
-          if (isBuyMode) {
-            tradeSubmitBtn.className = 'btn btn-primary btn-full mt-4';
-            tradeSubmitBtn.textContent = `Confirm Buy ${currentAssetTicker}`;
-          } else {
-            tradeSubmitBtn.className = 'btn btn-danger btn-full mt-4';
-            tradeSubmitBtn.textContent = `Confirm Sell ${currentAssetTicker}`;
-          }
-          updateCalculations();
-        });
-      });
-
-      // Order type change
-      tradeOrderType.addEventListener('change', () => {
-        if (tradeOrderType.value === 'limit') {
-          limitPriceGroup.style.display = 'flex';
-        } else {
-          limitPriceGroup.style.display = 'none';
-        }
-        updateCalculations();
-      });
-
-      // Input changes
-      tradeAmount.addEventListener('input', updateCalculations);
-      tradeLimitPrice.addEventListener('input', updateCalculations);
-
-      // Close button
-      tradeCloseBtn.addEventListener('click', () => {
-        tradeDialog.close();
-      });
-
-      tradeDialog.addEventListener('click', (event) => {
-        if (event.target === tradeDialog) {
-          tradeDialog.close();
-        }
-      });
-
-      // Form Submit (Execute Trade)
-      tradeForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const amount = parseFloat(tradeAmount.value);
-        if (isNaN(amount) || amount <= 0) {
-          alert('Please enter a valid amount.');
-          return;
-        }
-
-        let price = currentAssetPrice;
-        if (tradeOrderType.value === 'limit') {
-          price = parseFloat(tradeLimitPrice.value) || 0;
-        }
-
-        const estCost = amount * price;
-        const fee = estCost * 0.001;
-        const total = isBuyMode ? (estCost + fee) : (estCost - fee);
-
-        const { currentUserEmail, usersData, userData } = getUserData();
-        if (!userData) {
-          alert('Error: User session not found. Please log in again.');
-          return;
-        }
-
-        if (!userData.reserves) {
-          userData.reserves = {
-            'BTC': 0.5,
-            'ETH': 10.0,
-            'SOL': 150.0
-          };
-        }
-
-        const currentQty = userData.reserves[currentAssetTicker] || 0;
-        if (!isBuyMode && amount > currentQty) {
-          alert(`Insufficient reserves of ${currentAssetTicker} to execute this trade (You only have ${currentQty.toFixed(4)} ${currentAssetTicker}).`);
-          return;
-        }
-
-        let balanceNum = parseCurrency(userData.dashboard.balance);
-        
-        if (isBuyMode) {
-          if (total > balanceNum) {
-            alert('Insufficient USD balance to execute this trade.');
-            return;
-          }
-          balanceNum -= total;
-          userData.reserves[currentAssetTicker] = currentQty + amount;
-        } else {
-          balanceNum += total;
-          userData.reserves[currentAssetTicker] = Math.max(0, currentQty - amount);
-        }
-
-        // Update userData
-        userData.dashboard.balance = formatCurrency(balanceNum);
-
-        // Add transaction
-        if (!userData.transactions) userData.transactions = [];
-        const today = new Date().toISOString().split('T')[0];
-        userData.transactions.unshift({
-          date: today,
-          type: (isBuyMode ? 'Buy ' : 'Sell ') + currentAssetTicker,
-          amount: (isBuyMode ? '-' : '+') + formatCurrency(total),
-          status: 'Completed'
-        });
-
-        // Save
-        usersData[currentUserEmail] = userData;
-        localStorage.setItem('usersData', JSON.stringify(usersData));
-
-        // Close dialog
-        tradeDialog.close();
-
-        // Show Toast
-        toastMessage.textContent = `${isBuyMode ? 'Bought' : 'Sold'} ${amount} ${currentAssetTicker} successfully.`;
-        if (isBuyMode) {
-          tradeSuccessToast.classList.remove('sell-mode');
-          tradeSuccessToast.querySelector('.toast-icon').innerHTML = '<i class="fa-solid fa-circle-check"></i>';
-        } else {
-          tradeSuccessToast.classList.add('sell-mode');
-          tradeSuccessToast.querySelector('.toast-icon').innerHTML = '<i class="fa-solid fa-circle-check" style="color: var(--danger)"></i>';
-        }
-        tradeSuccessToast.hidden = false;
-
-        setTimeout(() => {
-          tradeSuccessToast.style.animation = 'none';
-          // trigger layout reflow
-          tradeSuccessToast.offsetHeight;
-          tradeSuccessToast.style.animation = null;
-        }, 10);
-
-        setTimeout(() => {
-          tradeSuccessToast.hidden = true;
-        }, 4000);
-      });
-    });
-  </script>
+  <script src="js/order-ticket.js"></script>
 
 </body>
 </html>

@@ -682,3 +682,45 @@
     opacity: 1;
   }
 }
+
+/* ── Advanced Order Ticket Modals ────────────────────────── */
+.trade-form__grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.trade-error-msg {
+  background: rgba(255, 82, 82, 0.1);
+  border-left: 3px solid var(--danger);
+  color: var(--danger);
+  padding: var(--space-3);
+  font-size: var(--text-xs);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-2);
+  outline: none;
+}
+
+.trade-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+}
+
+.trade-summary__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.trade-summary__item .trade-form__label {
+  font-size: 0.65rem;
+}
+
+.trade-summary__item .trade-form__value {
+  font-size: var(--text-xs);
+}
