@@ -123,6 +123,18 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.href = "index.html";
         });
     });
+
+    const signupLinks = document.querySelectorAll('a[href="register.html"]');
+    signupLinks.forEach(link => {
+        if (!link.closest('.nav__actions') && !link.closest('.nav__mobile-actions')) {
+            link.href = "dashboard.html";
+            if (link.textContent.includes("Start Trading Now")) {
+                link.innerHTML = 'Go to Dashboard <i class="fa-solid fa-arrow-right"></i>';
+            } else {
+                link.textContent = "Go to Dashboard";
+            }
+        }
+    });
 });
 
 // Newsletter Subscribe
