@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>
-    (function() {
-      const theme = localStorage.getItem('theme') || 'dark';
-      document.documentElement.setAttribute('data-theme', theme);
-    })();
-  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up | Archon Trading Platform</title>
@@ -114,24 +108,6 @@
 
   </div>
   <script>
-
-const password = document.getElementById("password");
-const toggle = document.getElementById("togglePassword");
-
-toggle.addEventListener("click", function () {
-    if (password.type === "password") {
-        password.type = "text";
-        toggle.classList.remove("fa-eye");
-        toggle.classList.add("fa-eye-slash");
-    } else {
-        password.type = "password";
-        toggle.classList.remove("fa-eye-slash");
-        toggle.classList.add("fa-eye");
-    }
-});
-</script>
-  <script src="script.js" defer></script>
-=======
     document.getElementById('registrationForm').addEventListener('submit', function(event) {
       event.preventDefault(); // Keeps the page from refreshing automatically
 
@@ -289,6 +265,5 @@ toggle.addEventListener("click", function () {
 
 
 <script src="script.js"></script>
-
 </body>
 </html>
