@@ -105,4 +105,21 @@ if (billingToggleInput) {
             }
         });
     }
-}
+}
+document.addEventListener("DOMContentLoaded", function () {
+    var isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    if (!isLoggedIn) return;
+
+    document.querySelectorAll(".nav__actions, .nav__mobile-actions").forEach(function (container) {
+        container.innerHTML = '<a href="#" class="btn btn-primary" id="navLogoutBtn">Log Out</a>';
+    });
+
+    document.querySelectorAll("#navLogoutBtn").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("currentUserEmail");
+            window.location.href = "index.html";
+        });
+    });
+});
