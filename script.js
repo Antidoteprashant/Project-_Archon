@@ -105,4 +105,37 @@ if (billingToggleInput) {
             }
         });
     }
-}
+}
+
+// Authentication State Logic
+document.addEventListener("DOMContentLoaded", () => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    
+    if (isLoggedIn) {
+        const loginLinks = document.querySelectorAll('a[href="login.html"]');
+        const signupLinks = document.querySelectorAll('a[href="register.html"]');
+        
+        loginLinks.forEach(link => {
+            link.style.display = "none";
+        });
+        
+        signupLinks.forEach(link => {
+            if (link.textContent.trim().includes("Sign Up")) {
+                link.href = "#";
+                link.textContent = "Log Out";
+                link.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem("isLoggedIn");
+                    window.location.href = "index.html";
+                });
+            } else {
+                link.href = "dashboard.html";
+                if (link.textContent.includes("Start Trading Now")) {
+                    link.innerHTML = 'Go to Dashboard <i class="fa-solid fa-arrow-right"></i>';
+                } else {
+                    link.textContent = "Go to Dashboard";
+                }
+            }
+        });
+    }
+});
