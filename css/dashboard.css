@@ -508,7 +508,7 @@
 
 /* ── Wallet Balance Card ─────────────────────────────────── */
 .wallet-card {
-  background: linear-gradient(135deg, #1a2544, #0f1829);
+  background: var(--wallet-card-bg);
   border: 1px solid rgba(0, 230, 118, 0.15);
   border-radius: var(--radius-2xl);
   padding: var(--space-6);
@@ -592,7 +592,7 @@
     var(--secondary)          38%  62%,
     #FF6D00                   62%  76%,
     #7C4DFF                   76%  88%,
-    rgba(255,255,255,0.1)     88% 100%
+    var(--donut-empty-segment) 88% 100%
   );
   position: relative;
 }
@@ -951,7 +951,7 @@
   background:
     repeating-linear-gradient(
       to bottom,
-      rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 1px,
+      var(--chart-grid-line) 0, var(--chart-grid-line) 1px,
       transparent 1px, transparent 25%
     );
 }

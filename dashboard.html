@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<head>
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+
   <head>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard | Archon Trading Platform</title>
@@ -324,6 +334,9 @@
       </div>
     </main>
   </div>
+
+
+  <script src="script.js" defer></script>
 
   <dialog id="watchlistDialog" class="watchlist-dialog">
     <form method="dialog" class="watchlist-dialog__content">
@@ -693,6 +706,7 @@
 
     initTradingSystem();
   </script>
+
 
 
 </body>

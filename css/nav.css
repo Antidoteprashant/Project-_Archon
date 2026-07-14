@@ -13,7 +13,7 @@
   height: var(--nav-height);
   display: flex;
   align-items: center;
-  background: rgba(11, 18, 32, 0.85);
+  background: var(--nav-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-color);
@@ -93,7 +93,7 @@
 
 .nav__link:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--nav-link-hover);
 }
 
 .nav__link.active {
@@ -149,7 +149,7 @@
   gap: 5px;
   width: 40px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--nav-hamburger-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   cursor: pointer;
@@ -158,7 +158,7 @@
 }
 
 .nav__hamburger:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--nav-hamburger-hover);
 }
 
 .nav__hamburger-line {
@@ -188,7 +188,7 @@
   top: var(--nav-height);
   left: 0;
   right: 0;
-  background: rgba(11, 18, 32, 0.98);
+  background: var(--nav-mobile-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-color);
@@ -250,6 +250,44 @@
   .nav__actions .btn { display: none; }
   .nav__hamburger    { display: flex; }
 }
+dark_lightmode
+
+/* ── Theme Toggle Button ──────────────────────────────────── */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-lg);
+  background: var(--nav-hamburger-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  cursor: pointer;
+  transition: background var(--transition-base), color var(--transition-base), transform var(--transition-spring);
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  background: var(--nav-hamburger-hover);
+  color: var(--primary);
+  transform: scale(1.05);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle i {
+  transition: transform var(--transition-slow) cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.theme-toggle.spinning i {
+  transform: rotate(360deg) scale(0.7);
+}
+
+
 #nav-toggle:checked ~ .nav__inner .nav__links {
     display: flex;
     flex-direction: column;
@@ -263,3 +301,4 @@
 }
 
 .nav__logo-img { height: 70px; width: auto; object-fit: contain; mix-blend-mode: screen; clip-path: inset(2% 0); }
+
