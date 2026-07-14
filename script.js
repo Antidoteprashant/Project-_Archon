@@ -112,7 +112,17 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!isLoggedIn) return;
 
     document.querySelectorAll(".nav__actions, .nav__mobile-actions").forEach(function (container) {
-        container.innerHTML = '<a href="#" class="btn btn-primary" id="navLogoutBtn">Log Out</a>';
+        // Keep the theme toggle button if it exists, remove everything else, then add Logout
+        const themeBtn = container.querySelector(".theme-toggle");
+        container.innerHTML = '';
+        if (themeBtn) container.appendChild(themeBtn);
+        
+        const logoutBtn = document.createElement("a");
+        logoutBtn.href = "#";
+        logoutBtn.className = "btn btn-primary";
+        logoutBtn.id = "navLogoutBtn";
+        logoutBtn.textContent = "Log Out";
+        container.appendChild(logoutBtn);
     });
 
     document.querySelectorAll("#navLogoutBtn").forEach(function (btn) {
@@ -256,28 +266,31 @@ document.addEventListener("DOMContentLoaded", () => {
         document.documentElement.setAttribute("data-theme", "light");
     }
 
-    const themeToggleBtns = document.querySelectorAll(".theme-toggle");
-    themeToggleBtns.forEach(btn => {
-        // Set initial icon
-        if (currentTheme === "light") {
-            btn.innerHTML = '<i class="fa-solid fa-moon"></i>';
-        } else {
-            btn.innerHTML = '<i class="fa-solid fa-sun"></i>';
-        }
-
-        btn.addEventListener("click", () => {
-            let theme = document.documentElement.getAttribute("data-theme");
-            
-            if (theme === "light") {
-                document.documentElement.removeAttribute("data-theme");
-                localStorage.setItem("theme", "dark");
-                themeToggleBtns.forEach(b => b.innerHTML = '<i class="fa-solid fa-sun"></i>');
-            } else {
-                document.documentElement.setAttribute("data-theme", "light");
-                localStorage.setItem("theme", "light");
-                themeToggleBtns.forEach(b => b.innerHTML = '<i class="fa-solid fa-moon"></i>');
-            }
+    const updateIcons = (theme) => {
+        document.querySelectorAll(".theme-toggle").forEach(btn => {
+            btn.innerHTML = theme === "light" ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
         });
+    };
+
+    updateIcons(currentTheme);
+
+    document.body.addEventListener("click", (e) => {
+        const btn = e.target.closest(".theme-toggle");
+        if (!btn) return;
+        
+        e.preventDefault();
+        
+        let theme = document.documentElement.getAttribute("data-theme");
+        
+        if (theme === "light") {
+            document.documentElement.removeAttribute("data-theme");
+            localStorage.setItem("theme", "dark");
+            updateIcons("dark");
+        } else {
+            document.documentElement.setAttribute("data-theme", "light");
+            localStorage.setItem("theme", "light");
+            updateIcons("light");
+        }
     });
 });
 
