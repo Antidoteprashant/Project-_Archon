@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order History | Archon Trading Platform</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <a href="index.html" class="sidebar__logo">
+        <img src="images/logo.jpg" alt="Archon" class="sidebar__logo-img">
+      </a>
+      
+      <div class="sidebar__section">
+        <a href="dashboard.html" class="sidebar__nav-item">
+          <i class="fa-solid fa-table-columns sidebar__nav-icon"></i> Overview
+        </a>
+        <a href="markets.html" class="sidebar__nav-item">
+          <i class="fa-solid fa-chart-line sidebar__nav-icon"></i> Trading
+        </a>
+        <a href="wallet.html" class="sidebar__nav-item">
+          <i class="fa-solid fa-wallet sidebar__nav-icon"></i> Wallet
+        </a>
+        <a href="order-history.html" class="sidebar__nav-item active">
+          <i class="fa-solid fa-clock-rotate-left sidebar__nav-icon"></i> History
+        </a>
+        <a href="coming-soon.html" class="sidebar__nav-item">
+          <i class="fa-solid fa-robot sidebar__nav-icon"></i> Trading Bots
+        </a>
+        <a href="coming-soon.html" class="sidebar__nav-item">
+          <i class="fa-solid fa-bullseye sidebar__nav-icon"></i> Alerts
+        </a>
+      </div>
+
+      <!-- User Profile -->
+      <div class="sidebar__user">
+        <div class="sidebar__user-avatar">JD</div>
+        <div>
+          <div class="sidebar__user-name">John Doe</div>
+          <div class="sidebar__user-role">Pro Account</div>
+        </div>
+        
+        <i class="fa-solid fa-ellipsis-vertical sidebar__user-menu" id="profileMenuToggle" style="cursor: pointer;"></i>
+        <div class="sidebar__dropdown" id="profileDropdown">
+          <a href="account-settings.html" class="sidebar__dropdown-item"><i class="fa-solid fa-user-gear"></i> Manage Trading Account</a>
+          <a href="#" id="logoutBtn" class="sidebar__dropdown-item text-danger" style="color: #ef4444;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dash-main">
+      <header class="dash-topbar">
+        <div class="dash-topbar__greeting">
+          <div class="dash-topbar__greeting-name">Trade History</div>
+          <div class="dash-topbar__greeting-sub">View your active trades and past orders.</div>
+        </div>
+      </header>
+
+      <div class="dash-content">
+        <div class="settings-card">
+          <h2 class="settings-title">Trades & Orders</h2>
+          
+          <div class="dash-tabs" style="display:flex; gap:1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border);">
+            <button class="dash-tab active" id="tabActiveTrades" style="padding: 0.5rem 1rem; border:none; background:none; color:var(--primary); border-bottom: 2px solid var(--primary); font-weight:600; cursor:pointer;">Active Trades</button>
+            <button class="dash-tab" id="tabOrderHistory" style="padding: 0.5rem 1rem; border:none; background:none; color:var(--text-muted); cursor:pointer;">Order History</button>
+          </div>
+
+          <table class="settings-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Asset</th>
+                <th>Side</th>
+                <th>Amount</th>
+                <th>Price</th>
+                <th>Notional</th>
+                <th>Leverage</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tradeTableBody">
+              <!-- Trades injected here via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/order-history.js"></script>
+</body>
+</html>

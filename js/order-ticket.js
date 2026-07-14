@@ -451,9 +451,30 @@ document.addEventListener('DOMContentLoaded', () => {
       status: leverage === 1 ? 'Completed' : 'Open Position'
     });
 
+    // Save detailed trade for Active Trades & History
+    if (!userData.trades) userData.trades = [];
+    
+    const price = getExecutionPrice();
+    
+    const newTrade = {
+      id: 'trade_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+      asset: currentAssetTicker,
+      side: isBuyMode ? 'Buy' : 'Sell',
+      amount: amount,
+      price: price, // execution price
+      notional: notional,
+      leverage: leverage,
+      timestamp: new Date().toISOString(),
+      status: 'Active'
+    };
+    userData.trades.unshift(newTrade);
+
     // Save
     usersData[currentUserEmail] = userData;
     localStorage.setItem('usersData', JSON.stringify(usersData));
+    
+    // Dispatch event to notify other scripts that a trade was placed
+    window.dispatchEvent(new Event('tradeUpdated'));
 
     // Close dialog
     closeDialog();
