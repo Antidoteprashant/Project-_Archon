@@ -5,22 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard | Archon Trading Platform</title>
   <link rel="icon" href="data:,">
-  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/dashboard.css">
+  <script>
+    // Run before the page renders so a logged-out visitor never sees the dashboard's placeholder data.
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.replace('login.html');
+    }
+  </script>
 </head>
 <body>
-
   <div class="dashboard">
     <!-- Sidebar -->
     <aside class="sidebar">
       <a href="index.html" class="sidebar__logo">
         <img src="images/logo.jpg" alt="Archon" class="sidebar__logo-img">
       </a>
-      
       <div class="sidebar__section">
         <a href="dashboard.html" class="sidebar__nav-item active">
   <i class="fa-solid fa-table-columns sidebar__nav-icon"></i> Overview
@@ -31,7 +33,7 @@
 <a href="wallet.html" class="sidebar__nav-item">
   <i class="fa-solid fa-wallet sidebar__nav-icon"></i> Wallet
 </a>
-<a href="transaction-history.html" class="sidebar__nav-item"></a>
+<a href="transaction-history.html" class="sidebar__nav-item">
   <i class="fa-solid fa-clock-rotate-left sidebar__nav-icon"></i> History
 </a>
 <a href="coming-soon.html" class="sidebar__nav-item">
@@ -41,17 +43,13 @@
   <i class="fa-solid fa-bullseye sidebar__nav-icon"></i> Alerts <span class="sidebar__nav-badge sidebar__nav-badge--green">2</span>
 </a>
       </div>
-
       <!-- User Profile -->
       <div class="sidebar__user">
         <div class="sidebar__user-avatar">JD</div>
-        
         <div>
           <div class="sidebar__user-name">John Doe</div>
           <div class="sidebar__user-role">Pro Account</div>
         </div>
-
-        
         <i class="fa-solid fa-ellipsis-vertical sidebar__user-menu" id="profileMenuToggle" style="cursor: pointer;"></i>
         <div class="sidebar__dropdown" id="profileDropdown">
           <a href="account-settings.html" class="sidebar__dropdown-item"><i class="fa-solid fa-user-gear"></i> Manage Trading Account</a>
@@ -62,14 +60,10 @@
           <div class="sidebar__dropdown-divider"></div>
           <a href="#" id="logoutBtn" class="sidebar__dropdown-item text-danger" style="color: #ef4444;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</a>
         </div>
-
-        
       </div>
     </aside>
-
     <!-- Main Content -->
     <main class="dash-main">
-      
       <!-- Topbar -->
       <header class="dash-topbar">
         <div class="dash-topbar__greeting">
@@ -97,7 +91,6 @@
               </form>
             </div>
           </div>
-
           <div class="dash-topbar__icon-wrap">
             <button type="button" class="dash-topbar__icon-btn" id="notifToggleBtn" aria-label="Open notifications" aria-expanded="false" aria-controls="dashNotificationsPanel">
               <i class="fa-regular fa-bell"></i>
@@ -133,9 +126,7 @@
           <a href="index.html" class="btn btn-outline btn-sm hide-mobile">Log Out</a>
         </div>
       </header>
-
       <div class="dash-content">
-        
         <!-- Overview Cards -->
         <div class="overview-cards">
           <div class="overview-card overview-card--primary">
@@ -148,7 +139,6 @@
               <span class="overview-card__trend trend--up"><i class="fa-solid fa-arrow-up"></i> 12.4%</span> vs last month
             </div>
           </div>
-          
           <div class="overview-card overview-card--secondary">
             <div class="overview-card__top">
               <div class="overview-card__label">24h P&L</div>
@@ -159,7 +149,6 @@
               <span class="overview-card__trend trend--up" id="dashPnlPercent"><i class="fa-solid fa-arrow-up"></i> 1.2%</span> today
             </div>
           </div>
-          
           <div class="overview-card overview-card--warning">
             <div class="overview-card__top">
               <div class="overview-card__label">Active Orders</div>
@@ -171,9 +160,7 @@
             </div>
           </div>
         </div>
-
         <div class="dash-grid">
-          
           <!-- Left Column -->
           <div class="flex-col gap-5">
             <!-- Wallet Card & Allocation -->
@@ -186,7 +173,6 @@
                   <button class="btn btn-ghost btn-sm" id="btnWithdraw" onclick="handleWithdrawClick()">Withdraw</button>
                 </div>
               </div>
-              
               <div class="dash-panel flex items-center gap-6">
                 <div class="allocation-chart">
                   <div class="donut-chart">
@@ -220,7 +206,6 @@
                 </div>
               </div>
             </div>
-
             <!-- Open Positions Table -->
             <div class="dash-panel">
               <div class="dash-panel__head">
@@ -246,7 +231,6 @@
               </div>
             </div>
           </div>
-
           <!-- Right Column -->
           <div class="flex-col gap-5">
             <!-- Timeline / Activity -->
@@ -281,7 +265,6 @@
                 </div>
               </div>
             </div>
-            
             <!-- Watchlist -->
             <div class="dash-panel">
               <div class="dash-panel__head">
@@ -319,13 +302,11 @@
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
     </main>
   </div>
-
   <dialog id="watchlistDialog" class="watchlist-dialog">
     <form method="dialog" class="watchlist-dialog__content">
       <h3 class="watchlist-dialog__title">Add to Watchlist</h3>
@@ -336,7 +317,6 @@
       </div>
     </form>
   </dialog>
-
   <script>
     const searchToggleBtn = document.getElementById('searchToggleBtn');
     const notifToggleBtn = document.getElementById('notifToggleBtn');
@@ -346,86 +326,70 @@
     const searchForm = searchPanel?.querySelector('form');
     const searchCloseBtn = searchPanel?.querySelector('[data-close-search]');
     const notifCloseBtn = notifPanel?.querySelector('[data-close-notifications]');
-
     function closeTopbarPanels(exceptPanel = null) {
       if (searchPanel && searchPanel !== exceptPanel) {
         searchPanel.hidden = true;
         searchToggleBtn?.setAttribute('aria-expanded', 'false');
       }
-
       if (notifPanel && notifPanel !== exceptPanel) {
         notifPanel.hidden = true;
         notifToggleBtn?.setAttribute('aria-expanded', 'false');
       }
     }
-
     function openTopbarPanel(panel, trigger) {
       closeTopbarPanels(panel);
       panel.hidden = false;
       trigger?.setAttribute('aria-expanded', 'true');
-
       if (panel === searchPanel) {
         searchInput?.focus();
       }
     }
-
     searchToggleBtn?.addEventListener('click', (event) => {
       event.stopPropagation();
       const isOpen = !searchPanel?.hidden;
-
       if (isOpen) {
         closeTopbarPanels();
       } else {
         openTopbarPanel(searchPanel, searchToggleBtn);
       }
     });
-
     notifToggleBtn?.addEventListener('click', (event) => {
       event.stopPropagation();
       const isOpen = !notifPanel?.hidden;
-
       if (isOpen) {
         closeTopbarPanels();
       } else {
         openTopbarPanel(notifPanel, notifToggleBtn);
       }
     });
-
     searchCloseBtn?.addEventListener('click', () => {
       closeTopbarPanels();
     });
-
     notifCloseBtn?.addEventListener('click', () => {
       closeTopbarPanels();
     });
-
     searchForm?.addEventListener('submit', (event) => {
       event.preventDefault();
       searchInput?.blur();
       closeTopbarPanels();
     });
-
     document.addEventListener('click', (event) => {
       const clickedInsideTopbar = event.target.closest('.dash-topbar__icon-wrap') || event.target.closest('.dash-topbar__panel');
       if (!clickedInsideTopbar) {
         closeTopbarPanels();
       }
     });
-
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         closeTopbarPanels();
       }
     });
-
     const watchlistAddBtn = document.getElementById('watchlistAddBtn');
     const watchlistDialog = document.getElementById('watchlistDialog');
     const watchlistList = document.querySelector('.watchlist-list');
     const addAssetButton = watchlistDialog?.querySelector('button[value="default"]');
-
     function addFakeWatchlistItem() {
       if (!watchlistList) return;
-
       const item = document.createElement('div');
       item.className = 'watchlist-item';
       item.innerHTML = `
@@ -441,21 +405,17 @@
           <div class="watchlist-item__price-sub text-primary">+0.0%</div>
         </div>
       `;
-
       watchlistList.appendChild(item);
     }
-
     if (watchlistAddBtn && watchlistDialog) {
       watchlistAddBtn.addEventListener('click', () => {
         watchlistDialog.showModal();
       });
-
       addAssetButton?.addEventListener('click', (event) => {
         event.preventDefault();
         addFakeWatchlistItem();
         watchlistDialog.close();
       });
-
       watchlistDialog.addEventListener('click', (event) => {
         if (event.target === watchlistDialog) {
           watchlistDialog.close();
@@ -465,20 +425,17 @@
     // Profile Menu Toggle Logic
     const profileMenuToggle = document.getElementById('profileMenuToggle');
     const profileDropdown = document.getElementById('profileDropdown');
-    
     if (profileMenuToggle && profileDropdown) {
       profileMenuToggle.addEventListener('click', (e) => {
         e.stopPropagation();
         profileDropdown.classList.toggle('show');
       });
-
       document.addEventListener('click', (e) => {
         if (!profileDropdown.contains(e.target) && e.target !== profileMenuToggle) {
           profileDropdown.classList.remove('show');
         }
       });
     }
-
     // Log Out Logic
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
@@ -489,76 +446,58 @@
         window.location.href = 'login.html';
       });
     }
-
     // Auth Check & User Data Population
     if (localStorage.getItem('isLoggedIn') !== 'true') {
-      // Disabled for testing purposes
-      // window.location.href = 'login.html';
-    }
-
+      window.location.href = 'login.html';
+    } else {
     const currentUserEmail = localStorage.getItem('currentUserEmail');
     let usersData = JSON.parse(localStorage.getItem('usersData') || '{}');
     const userData = usersData[currentUserEmail];
-
     if (userData) {
       const userName = userData.name;
       const firstName = userName.split(' ')[0];
-      
       // Update Name & Avatar
       const sidebarNameEl = document.querySelector('.sidebar__user-name');
       if (sidebarNameEl) sidebarNameEl.textContent = userName;
-      
       const greetingEl = document.querySelector('.dash-topbar__greeting-name');
       if (greetingEl) greetingEl.textContent = `Welcome back, ${firstName}! 👋`;
-      
       const avatarEl = document.querySelector('.sidebar__user-avatar');
       if (avatarEl) {
         const initials = userName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
         avatarEl.textContent = initials;
       }
-
       // Update Dashboard Stats with specific user data
       if (userData.dashboard) {
         const balanceEl = document.getElementById('dashTotalBalance');
         if (balanceEl) balanceEl.textContent = userData.dashboard.balance;
-
         const pnlEl = document.getElementById('dashPnl');
         if (pnlEl) pnlEl.textContent = userData.dashboard.pnl;
-
         const pnlPercentEl = document.getElementById('dashPnlPercent');
         if (pnlPercentEl) {
           pnlPercentEl.innerHTML = `<i class="fa-solid fa-arrow-up"></i> ${userData.dashboard.pnlPercent}`;
         }
-
         const ordersEl = document.getElementById('dashActiveOrders');
         if (ordersEl) ordersEl.textContent = userData.dashboard.activeOrders;
       }
-
       // Update wallet balance to match total balance for mockup
       const walletEl = document.getElementById('dashWalletBalance');
       if (walletEl) walletEl.textContent = userData.dashboard.balance;
-
       // Deposit / Withdraw Logic
       const btnDeposit = document.getElementById('btnDeposit');
       const btnWithdraw = document.getElementById('btnWithdraw');
-
       function parseBalance(balStr) {
         return parseFloat(balStr.replace(/[^0-9.-]+/g,""));
       }
-
       function formatBalance(num) {
         return '$' + num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       }
-
       function updateBalance(amount, type) {
         let currentBalance = parseBalance(userData.dashboard.balance);
         let newBalance = currentBalance + amount;
-        
         if (newBalance < 0) {
           alert("Insufficient funds!");
           return;
         }
-
         if (!userData.transactions) userData.transactions = [];
         const today = new Date().toISOString().split('T')[0];
         userData.transactions.unshift({
@@ -567,16 +506,13 @@
           amount: (amount > 0 ? '+' : '-') + formatBalance(Math.abs(amount)),
           status: 'Completed'
         });
-
         userData.dashboard.balance = formatBalance(newBalance);
         usersData[currentUserEmail] = userData;
         localStorage.setItem('usersData', JSON.stringify(usersData));
-
         const balEl = document.getElementById('dashTotalBalance');
         if (balEl) balEl.textContent = userData.dashboard.balance;
         if (walletEl) walletEl.textContent = userData.dashboard.balance;
       }
-
       window.handleDepositClick = function() {
         let amount = prompt("How much would you like to deposit?", "1000");
         if (amount !== null) {
@@ -584,7 +520,6 @@
           if (!isNaN(parsed)) updateBalance(parsed, 'Deposit');
         }
       };
-
       window.handleWithdrawClick = function() {
         let amount = prompt("How much would you like to withdraw?", "100");
         if (amount !== null) {
@@ -593,12 +528,11 @@
         }
       };
     }
-
+    }
     // Fake Trading Engine Logic
     function formatCurrency(num) {
       return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
     }
-
     function initTradingSystem() {
       if (!localStorage.getItem('fakeBalance')) {
         localStorage.setItem('fakeBalance', '100000'); // Start with $100k
@@ -608,29 +542,22 @@
       }
       updateDashboardUI();
     }
-
     function updateDashboardUI() {
       const balance = parseFloat(localStorage.getItem('fakeBalance'));
       const positions = JSON.parse(localStorage.getItem('openPositions'));
-
       const availableUsdEl = document.getElementById('available-usd');
       const totalBalanceEl = document.getElementById('total-balance');
       const positionsBody = document.getElementById('positions-body');
-
       if (availableUsdEl) availableUsdEl.textContent = formatCurrency(balance);
-      
       let totalPortfolioValue = balance;
-      
       if (positionsBody) {
         positionsBody.innerHTML = '';
         positions.forEach((pos, index) => {
           const currentPrice = pos.entryPrice; // Simplified: assuming current price is entry price for demo
           const positionValue = pos.size * currentPrice;
-          
           if (pos.type === 'Buy') {
             totalPortfolioValue += positionValue;
           }
-
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td>
@@ -650,10 +577,8 @@
           positionsBody.appendChild(tr);
         });
       }
-
       if (totalBalanceEl) totalBalanceEl.textContent = formatCurrency(totalPortfolioValue);
     }
-
     document.getElementById('deposit-btn')?.addEventListener('click', () => {
       const amountStr = prompt('Enter amount to deposit (USD):', '1000');
       if (amountStr) {
@@ -661,18 +586,15 @@
         if (!isNaN(amount) && amount > 0) {
           const currentBalance = parseFloat(localStorage.getItem('fakeBalance'));
           localStorage.setItem('fakeBalance', (currentBalance + amount).toString());
-          
           let txs = JSON.parse(localStorage.getItem('walletTransactions') || '[]');
           txs.push({ type: 'Deposit', amount: amount, timestamp: Date.now() });
           localStorage.setItem('walletTransactions', JSON.stringify(txs));
-
           updateDashboardUI();
         } else {
           alert('Invalid amount entered.');
         }
       }
     });
-
     document.getElementById('withdraw-btn')?.addEventListener('click', () => {
       const amountStr = prompt('Enter amount to withdraw (USD):', '1000');
       if (amountStr) {
@@ -680,21 +602,16 @@
         const currentBalance = parseFloat(localStorage.getItem('fakeBalance'));
         if (!isNaN(amount) && amount > 0 && amount <= currentBalance) {
           localStorage.setItem('fakeBalance', (currentBalance - amount).toString());
-          
           let txs = JSON.parse(localStorage.getItem('walletTransactions') || '[]');
           txs.push({ type: 'Withdraw', amount: amount, timestamp: Date.now() });
           localStorage.setItem('walletTransactions', JSON.stringify(txs));
-
           updateDashboardUI();
         } else {
           alert('Invalid amount or insufficient balance.');
         }
       }
     });
-
     initTradingSystem();
   </script>
-
-
 </body>
 </html>
